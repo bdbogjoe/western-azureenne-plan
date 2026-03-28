@@ -370,7 +370,7 @@ function altAt(km) {
 }
 
 // Mapping image 1000×300 px : calibré sur les cercles vert (x=46) et rouge (x=969)
-const OX = km  => 46 + (km / 161.6) * 923;
+const OX = km  => 49 + (km / 161.6) * 920;
 const OY = alt => 282 - (alt / 800) * 252;
 
 function buildMainOverlay() {
@@ -647,9 +647,12 @@ function update() {
                 <span class="cp-name">${cp.name}</span>
                 <span class="cp-badge ${badgeClass}">${typeLabel}</span>
                 <span class="night-indicator ${night ? 'night' : 'day'}">${night ? '🌙 Nuit' : '☀️ Jour'}</span>
-                ${cp.supplies === 'water' ? '<span class="cp-badge badge-supplies-water">💧 Eau</span>'
-                : cp.supplies === 'solid' ? `<span class="cp-badge badge-supplies-solid">💧<svg width="13" height="13" viewBox="0 0 13 13" style="vertical-align:middle" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.3"><g transform="rotate(-22 6.5 6.5)"><line x1="4.5" y1="1" x2="4.5" y2="12"/><line x1="3.5" y1="1" x2="3.5" y2="4.5"/><line x1="5.5" y1="1" x2="5.5" y2="4.5"/><path d="M3.5,4.5 Q4.5,6 5.5,4.5"/></g><g transform="rotate(22 6.5 6.5)"><line x1="8.5" y1="1" x2="8.5" y2="12"/><path d="M8.5,1 Q10.5,3 8.5,5.5"/></g></svg> Eau + solide</span>`
-                : cp.supplies === 'base'  ? '<span class="cp-badge badge-supplies-base">🍽️ Repas complet</span>'
+                ${cp.supplies === 'water'
+                ? '<span class="cp-badge badge-supplies-water"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:3px"><circle cx="10" cy="10" r="10" fill="#3a3a3a"/><path d="M6.5,5 L13.5,5 L12,15.5 L8,15.5 Z" fill="none" stroke="white" stroke-width="1.4" stroke-linejoin="round"/></svg>Eau</span>'
+                : cp.supplies === 'solid'
+                ? '<span class="cp-badge badge-supplies-solid"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:3px"><circle cx="10" cy="10" r="10" fill="#3a3a3a"/><g transform="rotate(-25,10,10)" stroke="white" stroke-linecap="round" fill="none"><line x1="10" y1="9" x2="10" y2="17" stroke-width="1.5"/><line x1="8.5" y1="3" x2="8.5" y2="7.5" stroke-width="1.1"/><line x1="10" y1="3" x2="10" y2="9" stroke-width="1.1"/><line x1="11.5" y1="3" x2="11.5" y2="7.5" stroke-width="1.1"/><path d="M8.5,7.5 Q10,9 11.5,7.5" stroke-width="1.1"/></g><g transform="rotate(25,10,10)" stroke="white" stroke-linecap="round" fill="none"><line x1="10" y1="3" x2="10" y2="17" stroke-width="1.5"/><path d="M10,3 C12.5,5 12.5,7.5 10,9" stroke-width="1.1"/></g></svg>Eau + solide</span>'
+                : cp.supplies === 'base'
+                ? '<span class="cp-badge badge-supplies-base"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:3px"><circle cx="10" cy="10" r="10" fill="#3a3a3a"/><circle cx="10" cy="11" r="4.5" fill="none" stroke="white" stroke-width="1.2"/><line x1="5" y1="4" x2="5" y2="17" stroke="white" stroke-width="1.3" stroke-linecap="round"/><line x1="4" y1="4" x2="4" y2="7.5" stroke="white" stroke-width="1" stroke-linecap="round"/><line x1="6" y1="4" x2="6" y2="7.5" stroke="white" stroke-width="1" stroke-linecap="round"/><path d="M4,7.5 Q5,9 6,7.5" fill="none" stroke="white" stroke-width="1" stroke-linecap="round"/><line x1="15" y1="4" x2="15" y2="17" stroke="white" stroke-width="1.3" stroke-linecap="round"/><path d="M15,4 C17,5.5 17,8 15,9" fill="none" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>Repas complet</span>'
                 : ''}
             </div>
             <div class="cp-body">${cells}</div>
