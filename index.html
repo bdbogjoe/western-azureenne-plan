@@ -136,6 +136,14 @@
             gap: 0.6rem;
         }
         .cp-info { display: flex; flex-direction: column; gap: 0.05rem; }
+        .cp-section {
+            grid-column: 1 / -1;
+            font-size: 0.68rem; text-transform: uppercase;
+            letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700;
+            border-top: 1px solid var(--border);
+            padding-top: 0.4rem; margin-top: 0.1rem;
+        }
+        .cp-section:first-child { border-top: none; margin-top: 0; padding-top: 0; }
         .cp-info-label {
             font-size: 0.68rem; text-transform: uppercase;
             letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600;
@@ -570,15 +578,75 @@ function update() {
             ? `<button class="clear-btn" onclick="clearActual(${i})" title="Effacer">✕</button>`
             : '';
 
-        let cells = `
+        let cells = '';
+
+        if (i > 0) {
+            // ── Section Segment ──
+            cells += `<div class="cp-section">Segment</div>
+            <div class="cp-info">
+                <span class="cp-info-label">Km</span>
+                <span class="cp-info-value">${(cp.km - CPS[i-1].km).toFixed(1)} km</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">D+</span>
+                <span class="cp-info-value">${(cp.dplus - CPS[i-1].dplus).toLocaleString('fr-FR')} m</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">D−</span>
+                <span class="cp-info-value">${(cp.dminus - CPS[i-1].dminus).toLocaleString('fr-FR')} m</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">Temps${r.segActual ? ' ✓' : ''}</span>
+                <span class="cp-info-value${r.segActual ? ' actual' : ''}">${fmtDur(r.segMins)}</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">ke</span>
+                <span class="cp-info-value">${r.ke.toFixed(1)} ke</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">Coeff</span>
+                <span class="cp-info-value" style="font-size:0.85rem">×${r.coeff.toFixed(2)}</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">Vitesse${r.segActual ? ' ✓' : ''}</span>
+                <span class="cp-info-value${r.segActual ? ' actual' : ''}">${r.speedSeg.toFixed(1)} km/h</span>
+            </div>`;
+        }
+
+        // ── Section Cumulé ──
+        const cumulMins = i > 0 ? (r.arrMs - START_MS) / 60_000 : 0;
+        cells += `<div class="cp-section">Cumulé</div>
             <div class="cp-info">
                 <span class="cp-info-label">${timeLabel}</span>
                 <span class="cp-info-value ${timeClass}">${fmtTime(r.arrMs)}</span>
             </div>`;
+        if (i > 0) {
+            cells += `
+            <div class="cp-info">
+                <span class="cp-info-label">Temps</span>
+                <span class="cp-info-value">${fmtDur(cumulMins)}</span>
+            </div>`;
+        }
+        cells += `
+            <div class="cp-info">
+                <span class="cp-info-label">D+</span>
+                <span class="cp-info-value">${cp.dplus.toLocaleString('fr-FR')} m</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">D−</span>
+                <span class="cp-info-value">${cp.dminus.toLocaleString('fr-FR')} m</span>
+            </div>`;
+        if (i > 0) {
+            cells += `
+            <div class="cp-info">
+                <span class="cp-info-label">Vit. moyenne</span>
+                <span class="cp-info-value">${r.speedCum.toFixed(1)} km/h</span>
+            </div>`;
+        }
 
         if (cp.type !== 'depart') {
             cells += `
-            <div class="cp-info">
+            <div class="cp-info" style="grid-column:1/-1">
                 <span class="cp-info-label">Saisir heure réelle</span>
                 <div style="display:flex;gap:0.35rem;align-items:center">
                     <input type="time" class="actual-input${hasActual ? ' is-set' : ''}"
@@ -587,56 +655,6 @@ function update() {
                            onchange="setActual(${i}, this.value)">
                     ${clearBtn}
                 </div>
-            </div>`;
-        }
-
-        cells += `
-            <div class="cp-info">
-                <span class="cp-info-label">D+ cumulé</span>
-                <span class="cp-info-value">${cp.dplus.toLocaleString('fr-FR')} m</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">D− cumulé</span>
-                <span class="cp-info-value">${cp.dminus.toLocaleString('fr-FR')} m</span>
-            </div>`;
-        if (i > 0) {
-            const cumulMins = (r.arrMs - START_MS) / 60_000;
-            cells += `
-            <div class="cp-info">
-                <span class="cp-info-label">Tps cumulé</span>
-                <span class="cp-info-value">${fmtDur(cumulMins)}</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">Km segment</span>
-                <span class="cp-info-value">${(cp.km - CPS[i-1].km).toFixed(1)} km</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">D+ segment</span>
-                <span class="cp-info-value">${(cp.dplus - CPS[i-1].dplus).toLocaleString('fr-FR')} m</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">D− segment</span>
-                <span class="cp-info-value">${(cp.dminus - CPS[i-1].dminus).toLocaleString('fr-FR')} m</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">Tps segment${r.segActual ? ' ✓' : ''}</span>
-                <span class="cp-info-value${r.segActual ? ' actual' : ''}">${fmtDur(r.segMins)}</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">ke segment</span>
-                <span class="cp-info-value">${r.ke.toFixed(1)} ke</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">Coeff appliqué</span>
-                <span class="cp-info-value" style="font-size:0.85rem">×${r.coeff.toFixed(2)}</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">Vit. segment${r.segActual ? ' ✓' : ''}</span>
-                <span class="cp-info-value${r.segActual ? ' actual' : ''}">${r.speedSeg.toFixed(1)} km/h</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">Vit. moyenne</span>
-                <span class="cp-info-value">${r.speedCum.toFixed(1)} km/h</span>
             </div>`;
         }
         if (cp.stop > 0) {
