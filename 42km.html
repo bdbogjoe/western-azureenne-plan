@@ -271,13 +271,13 @@
 <div class="controls">
     <div class="controls-label" style="margin-bottom:0.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:0.4rem">
         Référence :
-        <input type="number" id="ref-km" value="106" min="1" max="500" step="1"
+        <input type="number" id="ref-km" value="48" min="1" max="500" step="1"
                style="width:4rem;font-family:inherit;font-size:0.95rem;font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:0.4rem;padding:0.15rem 0.4rem;color:var(--text)"
                oninput="update()"> km ·
-        <input type="number" id="ref-dplus" value="4200" min="0" max="20000" step="100"
+        <input type="number" id="ref-dplus" value="1900" min="0" max="20000" step="100"
                style="width:5rem;font-family:inherit;font-size:0.95rem;font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:0.4rem;padding:0.15rem 0.4rem;color:var(--text)"
                oninput="update()"> m D+ ·
-        <input type="time" id="ref-time" value="18:00"
+        <input type="time" id="ref-time" value="07:30"
                style="font-family:inherit;font-size:0.95rem;font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:0.4rem;padding:0.15rem 0.4rem;color:var(--text)"
                oninput="update()">
         <span id="pace-display" style="font-size:0.8rem;color:var(--text-muted)"></span>
@@ -331,12 +331,12 @@
 <script>
 const START_MS = new Date('2026-04-11T09:00:00').getTime();
 function refKe() {
-    const km = parseFloat(document.getElementById('ref-km').value) || 106;
-    const dp = parseFloat(document.getElementById('ref-dplus').value) || 4000;
+    const km = parseFloat(document.getElementById('ref-km').value) || 48;
+    const dp = parseFloat(document.getElementById('ref-dplus').value) || 1900;
     return km + dp / 100;
 }
 function basePace() {
-    const val = document.getElementById('ref-time').value || '18:00';
+    const val = document.getElementById('ref-time').value || '07:30';
     const [h, m] = val.split(':').map(Number);
     return ((h * 60) + (m || 0)) / refKe();
 }
