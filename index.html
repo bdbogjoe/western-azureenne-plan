@@ -80,11 +80,15 @@
             background: var(--accent); color: white;
             border-radius: 999px; padding: 0.15rem 0.6rem; font-size: 0.9rem;
         }
+        .coeff-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+        }
         input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
         .slider-labels {
             display: flex; justify-content: space-between;
             font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;
         }
+        @media (max-width: 480px) { .coeff-grid { grid-template-columns: 1fr; } }
         .arrival-summary {
             background: var(--accent-light); border-radius: 0.5rem;
             padding: 0.75rem 1rem; margin-top: 0.75rem;
@@ -203,15 +207,23 @@
 </div>
 
 <div class="controls">
-    <div class="controls-label">
-        Coefficient fatigue :
-        <span class="coeff-value" id="coeff-display">×1.20</span>
-    </div>
-    <input type="range" id="coeff-slider" min="100" max="135" value="120" step="1" oninput="update()">
-    <div class="slider-labels">
-        <span>×1.00 base</span>
-        <span>×1.20 recommandé</span>
-        <span>×1.35 prudent</span>
+    <div class="coeff-grid">
+        <div>
+            <div class="controls-label">
+                Coeff début :
+                <span class="coeff-value" id="coeff-start-display">×1.00</span>
+            </div>
+            <input type="range" id="coeff-start" min="100" max="150" value="100" step="1" oninput="update()">
+            <div class="slider-labels"><span>×1.00</span><span>×1.50</span></div>
+        </div>
+        <div>
+            <div class="controls-label">
+                Coeff fin :
+                <span class="coeff-value" id="coeff-end-display">×1.30</span>
+            </div>
+            <input type="range" id="coeff-end" min="100" max="150" value="130" step="1" oninput="update()">
+            <div class="slider-labels"><span>×1.00</span><span>×1.50</span></div>
+        </div>
     </div>
     <div class="arrival-summary">
         <span>Arrivée estimée à Grimaud :</span>
@@ -224,7 +236,8 @@
 
 <footer>
     Plan de course personnel · Données roadbook officiel Western Azuréenne 2026<br>
-    Formule : ke_segment × (7,4 min/ke × coeff) + arrêts · Nuit = 21h→06h
+    Formule : ke_segment × (7,4 min/ke × coeff_interpolé) + arrêts · Nuit = 21h→06h<br>
+    Coeff interpolé linéairement entre coeff début (km 0) et coeff fin (km 161,6)
 </footer>
 
 <script>
@@ -335,11 +348,18 @@ function msToHHMM(ms) {
     return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 }
 
+function coeffs() {
+    return [
+        parseInt(document.getElementById('coeff-start').value) / 100,
+        parseInt(document.getElementById('coeff-end').value)   / 100,
+    ];
+}
+
 function setActual(i, value) {
     actualTimes[i] = null; // effacer avant de recalculer l'estimé de référence
     if (value) {
-        const coeff = parseInt(document.getElementById('coeff-slider').value) / 100;
-        const estMs = calculate(coeff)[i].arrMs; // estimé basé sur les actuals précédents
+        const [cs, ce] = coeffs();
+        const estMs = calculate(cs, ce)[i].arrMs; // estimé basé sur les actuals précédents
         const [hh, mm] = value.split(':').map(Number);
         const ref = new Date(estMs);
         ref.setHours(hh, mm, 0, 0);
@@ -360,36 +380,45 @@ function clearActual(i) {
 // ke = km + D+(m) / 100
 function segKe(kmDelta, dplusDelta) { return kmDelta + dplusDelta / 100; }
 
-function calculate(coeff) {
-    const pace = BASE_PACE * coeff; // min/ke
+function calculate(coeffStart, coeffEnd) {
+    // Précalcul des ke par segment et total
+    const segKes = CPS.map((cp, i) =>
+        i === 0 ? 0 : segKe(cp.km - CPS[i-1].km, cp.dplus - CPS[i-1].dplus)
+    );
+    const totalKe = segKes.reduce((a, b) => a + b, 0);
+
     let ms = START_MS;
+    let cumulKe = 0;
     const results = [];
+
     CPS.forEach((cp, i) => {
         if (i === 0) {
-            results.push({ arrMs: ms, depMs: ms, segMins: 0, ke: 0, segActual: false });
+            results.push({ arrMs: ms, depMs: ms, segMins: 0, ke: 0, segActual: false, speedSeg: 0, speedCum: 0, coeff: coeffStart });
             return;
         }
-        const prev    = CPS[i - 1];
-        const ke      = segKe(cp.km - prev.km, cp.dplus - prev.dplus);
-        const segMins = ke * pace;
-        const prevDep = results[i - 1].depMs; // heure de départ du checkpoint précédent
+        const ke = segKes[i];
+        // Coeff interpolé au milieu du segment
+        const ratio   = Math.min((cumulKe + ke / 2) / totalKe, 1);
+        const coeff   = coeffStart + (coeffEnd - coeffStart) * ratio;
+        const segMins = ke * BASE_PACE * coeff;
+        const prevDep = results[i - 1].depMs;
 
-        let arrMs      = prevDep + segMins * 60_000;
-        let realSeg    = segMins;
-        let segActual  = false;
+        let arrMs     = prevDep + segMins * 60_000;
+        let realSeg   = segMins;
+        let segActual = false;
 
         if (actualTimes[i] !== null) {
             arrMs     = actualTimes[i];
-            realSeg   = (actualTimes[i] - prevDep) / 60_000; // tps réel sur le segment
+            realSeg   = (actualTimes[i] - prevDep) / 60_000;
             segActual = true;
         }
 
-        const segKm    = cp.km - prev.km;
-        const cumulKm  = cp.km;
-        const speedSeg = segKm  / (realSeg / 60);                          // km/h segment
-        const speedCum = cumulKm / ((arrMs - START_MS) / 3_600_000);      // km/h depuis départ
+        cumulKe += ke;
+        const segKm   = cp.km - CPS[i-1].km;
+        const speedSeg = segKm / (realSeg / 60);
+        const speedCum = cp.km / ((arrMs - START_MS) / 3_600_000);
 
-        results.push({ arrMs, depMs: arrMs + cp.stop * 60_000, segMins: realSeg, ke, segActual, speedSeg, speedCum });
+        results.push({ arrMs, depMs: arrMs + cp.stop * 60_000, segMins: realSeg, ke, segActual, speedSeg, speedCum, coeff });
         ms = arrMs;
     });
     return results;
@@ -407,10 +436,11 @@ function typeInfo(type) {
 }
 
 function update() {
-    const coeff = parseInt(document.getElementById('coeff-slider').value) / 100;
-    document.getElementById('coeff-display').textContent = `×${coeff.toFixed(2)}`;
+    const [cs, ce] = coeffs();
+    document.getElementById('coeff-start-display').textContent = `×${cs.toFixed(2)}`;
+    document.getElementById('coeff-end-display').textContent   = `×${ce.toFixed(2)}`;
 
-    const res = calculate(coeff);
+    const res = calculate(cs, ce);
     const last = res[res.length - 1];
     document.getElementById('arrival-time').textContent = fmtTime(last.arrMs);
     document.getElementById('total-time').textContent =
@@ -487,6 +517,10 @@ function update() {
             <div class="cp-info">
                 <span class="cp-info-label">ke segment</span>
                 <span class="cp-info-value">${r.ke.toFixed(1)} ke</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">Coeff appliqué</span>
+                <span class="cp-info-value" style="font-size:0.85rem">×${r.coeff.toFixed(2)}</span>
             </div>
             <div class="cp-info">
                 <span class="cp-info-label">Vit. segment${r.segActual ? ' ✓' : ''}</span>
