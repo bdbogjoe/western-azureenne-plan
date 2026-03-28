@@ -3,26 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Western Azuréenne 2026 — Plan de Course</title>
+    <title>La Riviera 42 — 2026 — Plan de Course</title>
     <style>
         :root {
-            --bg: #f8f9fa;
-            --surface: #ffffff;
-            --surface2: #f1f3f5;
-            --border: #dee2e6;
-            --text: #212529;
-            --text-muted: #6c757d;
-            --accent: #2563eb;
-            --accent-light: #dbeafe;
-            --green: #16a34a;
-            --green-light: #dcfce7;
-            --orange: #ea580c;
-            --orange-light: #ffedd5;
-            --red: #dc2626;
-            --red-light: #fee2e2;
-            --night-light: #e0e7ff;
-            --base-vie: #7c3aed;
-            --base-vie-light: #ede9fe;
+            --bg: #f8f9fa; --surface: #ffffff; --surface2: #f1f3f5;
+            --border: #dee2e6; --text: #212529; --text-muted: #6c757d;
+            --accent: #2563eb; --accent-light: #dbeafe;
+            --green: #16a34a; --green-light: #dcfce7;
+            --orange: #ea580c; --orange-light: #ffedd5;
+            --red: #dc2626; --red-light: #fee2e2;
+            --night-light: #e0e7ff; --base-vie: #7c3aed; --base-vie-light: #ede9fe;
         }
         @media (prefers-color-scheme: dark) {
             :root {
@@ -59,6 +49,19 @@
         header { text-align: center; margin-bottom: 1.5rem; padding-top: 2rem; }
         header h1 { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
         header .sub { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem; }
+        .race-nav {
+            display: flex; justify-content: center; gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .race-nav a {
+            font-size: 0.8rem; font-weight: 600; padding: 0.3rem 0.85rem;
+            border-radius: 999px; border: 1px solid var(--border);
+            text-decoration: none; color: var(--text-muted);
+            background: var(--surface);
+        }
+        .race-nav a.active {
+            background: var(--accent); color: white; border-color: var(--accent);
+        }
         .stats-bar {
             display: flex; flex-wrap: wrap; gap: 0.5rem;
             justify-content: center; margin-bottom: 1.5rem;
@@ -80,9 +83,7 @@
             background: var(--accent); color: white;
             border-radius: 999px; padding: 0.15rem 0.6rem; font-size: 0.9rem;
         }
-        .coeff-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
-        }
+        .coeff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
         .slider-labels {
             display: flex; justify-content: space-between;
@@ -93,8 +94,7 @@
             background: var(--accent-light); border-radius: 0.5rem;
             padding: 0.75rem 1rem; margin-top: 0.75rem;
             display: flex; justify-content: space-between;
-            align-items: center; flex-wrap: wrap; gap: 0.5rem;
-            font-size: 0.9rem;
+            align-items: center; flex-wrap: wrap; gap: 0.5rem; font-size: 0.9rem;
         }
         .arrival-summary strong { font-size: 1.15rem; }
         .checkpoints { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -102,9 +102,8 @@
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 0.75rem; overflow: hidden;
         }
-        .cp-card.base-vie { border-color: var(--base-vie); border-width: 2px; }
-        .cp-card.depart  { border-color: var(--green);    border-width: 2px; }
-        .cp-card.arrivee { border-color: var(--red);      border-width: 2px; }
+        .cp-card.depart  { border-color: var(--green);  border-width: 2px; }
+        .cp-card.arrivee { border-color: var(--red);    border-width: 2px; }
         .cp-header {
             display: flex; align-items: center; gap: 0.6rem;
             padding: 0.7rem 1rem; background: var(--surface2);
@@ -125,13 +124,11 @@
             font-size: 0.72rem; padding: 0.2rem 0.55rem;
             border-radius: 999px; font-weight: 600;
         }
-        .badge-ravito  { background: var(--accent-light);   color: var(--accent);   }
-        .badge-base    { background: var(--base-vie-light); color: var(--base-vie); }
-        .badge-depart  { background: var(--green-light);    color: var(--green);    }
-        .badge-arrivee { background: var(--red-light);      color: var(--red);      }
-        .badge-supplies-water  { background: #f1f5f9; color: #0369a1; }
-        .badge-supplies-solid  { background: #f1f5f9; color: #b45309; }
-        .badge-supplies-base   { background: #f1f5f9; color: var(--base-vie); }
+        .badge-ravito  { background: var(--accent-light); color: var(--accent); }
+        .badge-depart  { background: var(--green-light);  color: var(--green);  }
+        .badge-arrivee { background: var(--red-light);    color: var(--red);    }
+        .badge-supplies-water { background: #f1f5f9; color: #0369a1; }
+        .badge-supplies-solid { background: #f1f5f9; color: #b45309; }
         .night-indicator {
             display: inline-flex; align-items: center; gap: 0.2rem;
             padding: 0.15rem 0.5rem; border-radius: 999px;
@@ -167,7 +164,6 @@
             vertical-align: middle;
         }
         .summary-table tr:last-child td { border-bottom: none; }
-        .summary-table tr.base-row { background: var(--base-vie-light); }
         .summary-table tr.depart-row { background: var(--green-light); font-weight: 700; }
         .summary-table tr.arrivee-row { background: var(--red-light); font-weight: 700; }
         .summary-table .t-actual { color: var(--green); font-weight: 700; }
@@ -228,23 +224,9 @@
             cursor: pointer; font-size: 0.85rem; color: var(--text);
             z-index: 100;
         }
-        .race-nav {
-            display: flex; justify-content: center; gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        .race-nav a {
-            font-size: 0.8rem; font-weight: 600; padding: 0.3rem 0.85rem;
-            border-radius: 999px; border: 1px solid var(--border);
-            text-decoration: none; color: var(--text-muted);
-            background: var(--surface);
-        }
-        .race-nav a.active {
-            background: var(--accent); color: white; border-color: var(--accent);
-        }
         footer {
             text-align: center; margin-top: 2rem;
-            color: var(--text-muted); font-size: 0.73rem;
-            line-height: 1.8;
+            color: var(--text-muted); font-size: 0.73rem; line-height: 1.8;
         }
         @media (max-width: 480px) {
             header h1 { font-size: 1.4rem; }
@@ -258,29 +240,32 @@
 <button class="theme-toggle" onclick="toggleTheme()" title="Basculer thème">🌗</button>
 
 <header>
-    <h1>🏔 Western Azuréenne 2026</h1>
-    <p class="sub">Grimaud · Vendredi 10 avril 2026 · 22h00</p>
-    <p class="sub">161,6 km · 4 907 m D+ · 4 952 m D− · ~210 km-effort</p>
+    <h1>🌊 La Riviera 42 — 2026</h1>
+    <p class="sub">La Croix-Valmer → Grimaud · Samedi 11 avril 2026 · 09h00</p>
+    <p class="sub">44,3 km · 1 151 m D+ · 1 148 m D− · ~56 km-effort</p>
 </header>
 
 <nav class="race-nav">
-    <a href="index.html" class="active">Western 165</a>
+    <a href="index.html">Western 165</a>
     <a href="100km.html">La Garde 100</a>
-    <a href="42km.html">La Riviera 42</a>
+    <a href="42km.html" class="active">La Riviera 42</a>
 </nav>
 
 <div class="profile-wrap">
-    <div class="profile-title">Profil altimétrique · 161,6 km · 4 907 m D+</div>
-    <a href="https://tracedetrail.fr/fr/trace/316621" target="_blank" rel="noopener" style="display:block;position:relative;border-radius:0.4rem;overflow:hidden">
-        <img src="profile.png" style="width:100%;display:block">
+    <div class="profile-title">Profil altimétrique · 44,3 km · 1 151 m D+</div>
+    <a href="https://tracedetrail.fr/fr/trace/318935" target="_blank" rel="noopener" style="display:block;position:relative;border-radius:0.4rem;overflow:hidden">
+        <img src="profile-42.png" style="width:100%;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;align-items:center;justify-content:center;height:80px;background:var(--surface2);border-radius:0.4rem;color:var(--text-muted);font-size:0.85rem">
+            Ajouter <strong style="margin:0 0.3rem">profile-42.png</strong> depuis TraceDeTrail
+        </div>
         <div id="profile-overlay"></div>
     </a>
 </div>
 
 <div class="stats-bar">
-    <span class="stat-chip">📍 Départ Grimaud 22h00 ven</span>
-    <span class="stat-chip">🏁 Clôture dim 11h30</span>
-    <span class="stat-chip">⛺ 2 bases de vie</span>
+    <span class="stat-chip">📍 Départ La Croix-Valmer 09h00 sam</span>
+    <span class="stat-chip">🏁 Arrivée Grimaud</span>
+    <span class="stat-chip">🚰 2 ravitos complets</span>
 </div>
 
 <div class="controls">
@@ -303,9 +288,9 @@
         <div>
             <div class="controls-label">
                 Coeff fin :
-                <span class="coeff-value" id="coeff-end-display">×1.30</span>
+                <span class="coeff-value" id="coeff-end-display">×1.10</span>
             </div>
-            <input type="range" id="coeff-end" min="100" max="150" value="130" step="1" oninput="update()">
+            <input type="range" id="coeff-end" min="100" max="150" value="110" step="1" oninput="update()">
             <div class="slider-labels"><span>×1.00</span><span>×1.50</span></div>
         </div>
     </div>
@@ -318,18 +303,13 @@
 
 <div class="checkpoints" id="checkpoints"></div>
 
-<div class="controls" id="summary-wrap" style="margin-top:1.5rem">
+<div class="controls" style="margin-top:1.5rem">
     <div class="controls-label">📋 Résumé des temps de passage</div>
-    <table class="summary-table" id="summary-table">
+    <table class="summary-table">
         <thead>
             <tr>
-                <th>Km</th>
-                <th>Checkpoint</th>
-                <th>Arrivée</th>
-                <th>Pause</th>
-                <th>Dist.</th>
-                <th>Segment</th>
-                <th>Cumulé</th>
+                <th>Km</th><th>Checkpoint</th><th>Arrivée</th>
+                <th>Pause</th><th>Dist.</th><th>Segment</th><th>Cumulé</th>
             </tr>
         </thead>
         <tbody id="summary-body"></tbody>
@@ -339,13 +319,12 @@
 <footer>
     Plan de course personnel · Données roadbook officiel Western Azuréenne 2026<br>
     Formule : ke_segment × (7,4 min/ke × coeff_interpolé) + arrêts · Nuit = 21h→06h<br>
-    Coeff interpolé linéairement entre coeff début (km 0) et coeff fin (km 161,6)
+    Coeff interpolé linéairement entre coeff début (km 0) et coeff fin (km 44,3)
 </footer>
 
 <script>
-// ── Constantes ─────────────────────────────────────────────────────────────────
-const START_MS  = new Date('2026-04-10T22:00:00').getTime();
-const REF_KE    = 146; // Coursières Ultra : 106 km + 4 000 m D+
+const START_MS = new Date('2026-04-11T09:00:00').getTime();
+const REF_KE   = 146;
 function basePace() {
     const val = document.getElementById('ref-time').value || '18:00';
     const [h, m] = val.split(':').map(Number);
@@ -354,94 +333,38 @@ function basePace() {
 
 function cutoff(isoStr) { return new Date(isoStr).getTime(); }
 
-// ── Données ────────────────────────────────────────────────────────────────────
 const CPS = [
     {
-        km: 0,     dplus: 0,    dminus: 0,    name: 'Grimaud',           type: 'depart',
-        stop: 0,   cutoff: null, supplies: null, maps: 'https://maps.google.com/?q=43.27330493658632,6.522089364317412',
-        tip: 'Départ 22h00 — vérification matériel obligatoire. Lampe frontale indispensable dès le départ. Gérer le départ groupé, ne pas partir trop vite.',
+        km: 0,    dplus: 0,    dminus: 0,    name: 'La Croix-Valmer',  type: 'depart',
+        stop: 0,  cutoff: null, supplies: null, maps: 'https://maps.google.com/?q=43.163,6.534',
+        tip: 'Départ 09h00 plein jour depuis la Plage du Débarquement. Course accessible, profil côtier et collines. Gérer le départ groupé.',
     },
     {
-        km: 19.2,  dplus: 517,  dminus: 577,  name: 'Sainte-Maxime',     type: 'ravito',
-        stop: 5,   cutoff: cutoff('2026-04-11T02:00:00'), supplies: 'solid', maps: 'https://maps.google.com/?q=43.32963652243301,6.615851514796187',
-        tip: 'Premier ravito. Nuit noire — vérifier lampe frontale. Remplir flasques, manger solide. Barrière à 02h00, large marge attendue au départ.',
+        km: 12.9, dplus: 433,  dminus: 420,  name: "Val d'Astier",    type: 'ravito',
+        stop: 10, cutoff: null, supplies: 'solid', maps: 'https://maps.google.com/?q=43.22578464069435,6.513089925255604',
+        tip: 'Premier ravito solide. Tiers de course — bien manger et boire avant la montée vers Gassin.',
     },
     {
-        km: 34.4,  dplus: 1132, dminus: 1003, name: 'Col de Gratteloup', type: 'ravito',
-        stop: 10,   cutoff: null, supplies: 'water', maps: 'https://maps.google.com/?q=43.1714,6.3319',
-        tip: 'Eau seulement — prévoir sa propre alimentation. Col technique. Belle vue au lever du soleil si timing ok.',
+        km: 27.5, dplus: 1056, dminus: 866,  name: 'Gassin',          type: 'ravito',
+        stop: 10, cutoff: null, supplies: 'solid', maps: 'https://maps.google.com/?q=43.23010624483133,6.585828207279812',
+        tip: 'Ravito solide. Village médiéval perché — vue imprenable. Plus que 16,8 km ! Descente technique vers Grimaud.',
     },
     {
-        km: 47.7,  dplus: 1569, dminus: 1590, name: 'Le Plan de la Tour', type: 'ravito',
-        stop: 10,   cutoff: cutoff('2026-04-11T09:30:00'), supplies: 'solid', maps: 'https://maps.google.com/?q=43.33882079177486,6.546610855588005',
-        tip: 'Ravito solide — faire le plein avant le long segment vers La Garde-Freinet. Barrière 09h30, surveiller la marge.',
-    },
-    {
-        km: 61.6,  dplus: 2052, dminus: 1805, name: 'La Garde-Freinet',  type: 'base1',
-        stop: 30,  cutoff: cutoff('2026-04-11T13:00:00'), supplies: 'base', maps: 'https://maps.google.com/?q=43.31785341478136,6.469418328009784',
-        tip: 'BASE VIE. Récupérer sac de délestage. Soins pieds si nécessaire. Manger chaud. Ne dormir que si marge > 2h sur barrière.',
-    },
-    {
-        km: 82.6,  dplus: 2793, dminus: 2700, name: 'Col du Périer',     type: 'ravito',
-        stop: 10,   cutoff: null, supplies: 'solid', maps: 'https://maps.google.com/?q=43.2551,6.4262',
-        tip: 'Ravito solide. Section longue après la base vie — rythme souvent ralenti, c\'est normal. Gérer l\'hydratation en après-midi.',
-    },
-    {
-        km: 95.1,  dplus: 3004, dminus: 3070, name: 'La Môle',           type: 'base2',
-        stop: 30,  cutoff: cutoff('2026-04-11T21:00:00'), supplies: 'base', maps: 'https://maps.google.com/?q=43.206442062697576,6.468406859701418',
-        tip: 'BASE VIE. Récupérer sac de délestage. Se préparer pour la nuit : vêtements chauds, nouvelle lampe. Barrière serrée à 21h00 — ne pas traîner.',
-    },
-    {
-        km: 105,   dplus: 3552, dminus: 3374, name: 'Col de Canadel',    type: 'ravito',
-        stop: 10,   cutoff: null, supplies: 'water', maps: 'https://maps.google.com/?q=43.1689,6.4749',
-        tip: 'Eau seulement — prévoir alimentation personnelle. Nuit tombée. Garder le cap et la concentration. Section de montée — rythme posé.',
-    },
-    {
-        km: 117.6, dplus: 3757, dminus: 3804, name: 'Plage de la Douane', type: 'ravito',
-        stop: 10,   cutoff: cutoff('2026-04-12T02:30:00'), supplies: 'solid', maps: 'https://maps.google.com/?q=43.18854111308782,6.55562140299181',
-        tip: 'Ravito solide. Point de bascule — la mer ! 2h30 du matin : moment dur psychologiquement. Tenir bon, le plus dur est derrière. Barrière à 02h30 dim.',
-    },
-    {
-        km: 130.4, dplus: 4189, dminus: 4224, name: "Val d'Astier",      type: 'ravito',
-        stop: 10,   cutoff: null, supplies: 'water', maps: 'https://maps.google.com/?q=43.22578464069435,6.513089925255604',
-        tip: 'Eau seulement — prévoir alimentation personnelle. L\'aube approche, tenir jusqu\'au lever du jour. Manger et boire malgré la fatigue.',
-    },
-    {
-        km: 145.1, dplus: 4812, dminus: 4682, name: 'Gassin',            type: 'ravito',
-        stop: 10,   cutoff: null, supplies: 'solid', maps: 'https://maps.google.com/?q=43.23010624483133,6.585828207279812',
-        tip: 'Ravito solide. Village médiéval perché — vue imprenable. Plus que 16,5 km ! Gérer l\'allure sur cette fin de course.',
-    },
-    {
-        km: 161.6, dplus: 4907, dminus: 4952, name: 'Arrivée Grimaud',   type: 'arrivee',
-        stop: 0,   cutoff: cutoff('2026-04-12T11:30:00'), supplies: null, maps: 'https://maps.google.com/?q=43.27086586410013,6.560116181024526',
+        km: 44.3, dplus: 1151, dminus: 1148, name: 'Arrivée Grimaud', type: 'arrivee',
+        stop: 0,  cutoff: cutoff('2026-04-12T11:30:00'), supplies: null, maps: 'https://maps.google.com/?q=43.27086586410013,6.560116181024526',
         tip: 'LIGNE D\'ARRIVÉE. Profitez de chaque mètre des derniers kilomètres !',
     },
 ];
 
-// ── Profil altimétrique (points [km, alt] lu depuis TraceDeTrail) ─────────────
+// Profil [km, alt] — portion finale du parcours commun (depuis La Croix-Valmer)
 const PROFILE_PTS = [
-    [0,50],[5,150],[9,170],[12,110],[16,130],
-    [19.2,70],
-    [24,130],[30,180],
-    [34.4,280],
-    [39,140],[43,80],
-    [47.7,20],
-    [52,150],[58,280],
-    [61.6,370],
-    [66,650],[70,420],[75,300],[79,150],
-    [82.6,65],
-    [86,250],[90,480],[93,630],
-    [95.1,70],
-    [98,220],[102,490],
-    [105,265],
-    [110,150],[114,60],
-    [117.6,5],
-    [121,130],[125,240],
-    [130.4,85],
-    [134,210],[138,250],[142,180],
-    [145.1,160],
-    [149,80],[153,130],[157,150],[159,90],
-    [161.6,50],
+    [0,5],
+    [3.4,130],[7.4,240],
+    [12.8,85],
+    [16.4,210],[20.4,250],[24.4,180],
+    [27.5,160],
+    [31.4,80],[35.4,130],[39.4,150],[41.4,90],
+    [44.3,50],
 ];
 
 function altAt(km) {
@@ -454,22 +377,21 @@ function altAt(km) {
     return before[1] + ((km - before[0]) / (after[0] - before[0])) * (after[1] - before[1]);
 }
 
-// Mapping image 1000×300 px : calibré sur les cercles vert (x=46) et rouge (x=969)
-const OX = km  => 49 + (km / 161.6) * 920;
+// Calibration profile-42.png — green x=52, red x=969
+const OX = km  => 52 + (km / 44.3) * 917;
 const OY = alt => 282 - (alt / 800) * 252;
 
 function buildMainOverlay() {
     let out = '';
-    CPS.forEach((cp, i) => {
+    CPS.forEach((cp) => {
         const x = OX(cp.km).toFixed(1);
         const y = OY(altAt(cp.km)).toFixed(1);
-        const isBase = cp.type==='base1'||cp.type==='base2';
-        const isDepart = cp.type==='depart';
-        const isArrivee = cp.type==='arrivee';
-        const isEnd  = isDepart || isArrivee;
-        const col = isBase ? 'var(--base-vie)' : isDepart ? 'var(--green)' : isArrivee ? 'var(--red)' : 'rgba(80,80,80,0.55)';
-        out += `<line x1="${x}" y1="28" x2="${x}" y2="282" stroke="${col}" stroke-width="${isBase||isEnd?2:1}" stroke-dasharray="${isBase||isEnd?'':'4,3'}"/>`;
-        out += `<circle cx="${x}" cy="${y}" r="${isBase||isEnd?5:3.5}" fill="${col}" stroke="white" stroke-width="1.5"/>`;
+        const isDepart = cp.type === 'depart';
+        const isArrivee = cp.type === 'arrivee';
+        const isEnd = isDepart || isArrivee;
+        const col = isDepart ? 'var(--green)' : isArrivee ? 'var(--red)' : 'rgba(80,80,80,0.55)';
+        out += `<line x1="${x}" y1="28" x2="${x}" y2="282" stroke="${col}" stroke-width="${isEnd ? 2 : 1}" stroke-dasharray="${isEnd ? '' : '4,3'}"/>`;
+        out += `<circle cx="${x}" cy="${y}" r="${isEnd ? 5 : 3.5}" fill="${col}" stroke="white" stroke-width="1.5"/>`;
     });
     return `<svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none">${out}</svg>`;
 }
@@ -486,13 +408,12 @@ function buildMiniOverlay(hlSeg) {
     }
     CPS.forEach((cp, i) => {
         const x = OX(cp.km).toFixed(1);
-        const isBorder = i===hlSeg||i===hlSeg-1;
-        out += `<line x1="${x}" y1="0" x2="${x}" y2="300" stroke="${isBorder?'var(--accent)':'rgba(100,100,100,0.25)'}" stroke-width="${isBorder?0:0.6}"/>`;
+        const isBorder = i === hlSeg || i === hlSeg - 1;
+        out += `<line x1="${x}" y1="0" x2="${x}" y2="300" stroke="${isBorder ? 'var(--accent)' : 'rgba(100,100,100,0.25)'}" stroke-width="${isBorder ? 0 : 0.6}"/>`;
     });
     return `<svg viewBox="0 0 1000 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none">${out}</svg>`;
 }
 
-// ── Helpers ────────────────────────────────────────────────────────────────────
 function isNight(ms) {
     const h = new Date(ms).getHours();
     return h >= 21 || h < 6;
@@ -502,8 +423,7 @@ function fmtTime(ms) {
     const d = new Date(ms);
     const hh = String(d.getHours()).padStart(2,'0');
     const mm = String(d.getMinutes()).padStart(2,'0');
-    const day = d.getDay(); // 5=ven, 6=sam, 0=dim
-    const lbl = day === 6 ? ' sam' : day === 0 ? ' dim' : ' ven';
+    const lbl = d.getDay() === 0 ? ' dim' : ' sam';
     return `${hh}h${mm}${lbl}`;
 }
 
@@ -521,7 +441,6 @@ function fmtMargin(marginMins) {
     return marginMins >= 0 ? `+${str} sur barrière` : `−${str} — DÉPASSÉE`;
 }
 
-// ── Temps réels saisis par l'utilisateur (null = pas encore passé) ────────────
 const actualTimes = new Array(CPS.length).fill(null);
 
 function msToHHMM(ms) {
@@ -537,14 +456,13 @@ function coeffs() {
 }
 
 function setActual(i, value) {
-    actualTimes[i] = null; // effacer avant de recalculer l'estimé de référence
+    actualTimes[i] = null;
     if (value) {
         const [cs, ce] = coeffs();
-        const estMs = calculate(cs, ce)[i].arrMs; // estimé basé sur les actuals précédents
+        const estMs = calculate(cs, ce)[i].arrMs;
         const [hh, mm] = value.split(':').map(Number);
         const ref = new Date(estMs);
         ref.setHours(hh, mm, 0, 0);
-        // Ajustement de jour si besoin (ex: "01:30" peut être le lendemain de "23:45")
         if (ref.getTime() < estMs - 12 * 3600_000) ref.setDate(ref.getDate() + 1);
         if (ref.getTime() > estMs + 18 * 3600_000) ref.setDate(ref.getDate() - 1);
         actualTimes[i] = ref.getTime();
@@ -552,67 +470,50 @@ function setActual(i, value) {
     update();
 }
 
-function clearActual(i) {
-    actualTimes[i] = null;
-    update();
-}
+function clearActual(i) { actualTimes[i] = null; update(); }
 
-// ── Calcul ─────────────────────────────────────────────────────────────────────
-// ke = km + D+(m) / 100
 function segKe(kmDelta, dplusDelta) { return kmDelta + dplusDelta / 100; }
 
 function calculate(coeffStart, coeffEnd) {
-    // Précalcul des ke par segment et total
     const segKes = CPS.map((cp, i) =>
         i === 0 ? 0 : segKe(cp.km - CPS[i-1].km, cp.dplus - CPS[i-1].dplus)
     );
     const totalKe = segKes.reduce((a, b) => a + b, 0);
-
-    let ms = START_MS;
-    let cumulKe = 0;
+    let ms = START_MS, cumulKe = 0;
     const results = [];
-
     CPS.forEach((cp, i) => {
         if (i === 0) {
             results.push({ arrMs: ms, depMs: ms, segMins: 0, ke: 0, segActual: false, speedSeg: 0, speedCum: 0, coeff: coeffStart });
             return;
         }
         const ke = segKes[i];
-        // Coeff interpolé au milieu du segment
         const ratio   = Math.min((cumulKe + ke / 2) / totalKe, 1);
         const coeff   = coeffStart + (coeffEnd - coeffStart) * ratio;
         const segMins = ke * basePace() * coeff;
         const prevDep = results[i - 1].depMs;
-
-        let arrMs     = prevDep + segMins * 60_000;
-        let realSeg   = segMins;
-        let segActual = false;
-
+        let arrMs = prevDep + segMins * 60_000, realSeg = segMins, segActual = false;
         if (actualTimes[i] !== null) {
-            arrMs     = actualTimes[i];
-            realSeg   = (actualTimes[i] - prevDep) / 60_000;
+            arrMs = actualTimes[i];
+            realSeg = (actualTimes[i] - prevDep) / 60_000;
             segActual = true;
         }
-
         cumulKe += ke;
-        const segKm   = cp.km - CPS[i-1].km;
-        const speedSeg = segKm / (realSeg / 60);
-        const speedCum = cp.km / ((arrMs - START_MS) / 3_600_000);
-
-        results.push({ arrMs, depMs: arrMs + cp.stop * 60_000, segMins: realSeg, ke, segActual, speedSeg, speedCum, coeff });
+        results.push({
+            arrMs, depMs: arrMs + cp.stop * 60_000, segMins: realSeg, ke, segActual,
+            speedSeg: (cp.km - CPS[i-1].km) / (realSeg / 60),
+            speedCum: cp.km / ((arrMs - START_MS) / 3_600_000),
+            coeff,
+        });
         ms = arrMs;
     });
     return results;
 }
 
-// ── Rendu ──────────────────────────────────────────────────────────────────────
 function typeInfo(type) {
     switch (type) {
-        case 'depart':  return ['Départ',          'badge-depart',  'cp-card depart'];
-        case 'arrivee': return ['Arrivée',          'badge-arrivee', 'cp-card arrivee'];
-        case 'base1':
-        case 'base2':   return ['Base de Vie',      'badge-base',    'cp-card base-vie'];
-        default:        return ['Ravitaillement',   'badge-ravito',  'cp-card'];
+        case 'depart':  return ['Départ',        'badge-depart',  'cp-card depart'];
+        case 'arrivee': return ['Arrivée',        'badge-arrivee', 'cp-card arrivee'];
+        default:        return ['Ravitaillement', 'badge-ravito',  'cp-card'];
     }
 }
 
@@ -638,7 +539,6 @@ function update() {
         const night = isNight(r.arrMs);
         const [typeLabel, badgeClass, cardClass] = typeInfo(cp.type);
 
-        // Cutoff
         let cutoffHtml = '';
         if (cp.cutoff) {
             const marginMins = (cp.cutoff - r.arrMs) / 60_000;
@@ -649,75 +549,34 @@ function update() {
             </div>`;
         }
 
-        // Body cells
         const hasActual = actualTimes[i] !== null;
-        const timeLabel = hasActual ? 'Heure réelle ✓' : 'Arrivée estimée';
-        const timeClass = hasActual ? 'actual' : (night ? 'night' : 'day');
         const inputVal  = hasActual ? msToHHMM(actualTimes[i]) : '';
         const clearBtn  = hasActual
             ? `<button class="clear-btn" onclick="clearActual(${i})" title="Effacer">✕</button>`
             : '';
 
         let cells = '';
-
         if (i > 0) {
-            // ── Section Segment ──
             cells += `<div class="cp-section">Segment</div>
-            <div class="cp-info">
-                <span class="cp-info-label">Temps${r.segActual ? ' ✓' : ''}</span>
-                <span class="cp-info-value${r.segActual ? ' actual' : ''}">${fmtDur(r.segMins)}</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">Km</span>
-                <span class="cp-info-value">${(cp.km - CPS[i-1].km).toFixed(1)} km</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">D+</span>
-                <span class="cp-info-value">${(cp.dplus - CPS[i-1].dplus).toLocaleString('fr-FR')} m</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">D−</span>
-                <span class="cp-info-value">${(cp.dminus - CPS[i-1].dminus).toLocaleString('fr-FR')} m</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">ke</span>
-                <span class="cp-info-value">${r.ke.toFixed(1)} ke</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">Coeff</span>
-                <span class="cp-info-value" style="font-size:0.85rem">×${r.coeff.toFixed(2)}</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">Vitesse${r.segActual ? ' ✓' : ''}</span>
-                <span class="cp-info-value${r.segActual ? ' actual' : ''}">${r.speedSeg.toFixed(1)} km/h</span>
-            </div>`;
+            <div class="cp-info"><span class="cp-info-label">Temps${r.segActual ? ' ✓' : ''}</span><span class="cp-info-value${r.segActual ? ' actual' : ''}">${fmtDur(r.segMins)}</span></div>
+            <div class="cp-info"><span class="cp-info-label">Km</span><span class="cp-info-value">${(cp.km - CPS[i-1].km).toFixed(1)} km</span></div>
+            <div class="cp-info"><span class="cp-info-label">D+</span><span class="cp-info-value">${(cp.dplus - CPS[i-1].dplus).toLocaleString('fr-FR')} m</span></div>
+            <div class="cp-info"><span class="cp-info-label">D−</span><span class="cp-info-value">${(cp.dminus - CPS[i-1].dminus).toLocaleString('fr-FR')} m</span></div>
+            <div class="cp-info"><span class="cp-info-label">ke</span><span class="cp-info-value">${r.ke.toFixed(1)} ke</span></div>
+            <div class="cp-info"><span class="cp-info-label">Coeff</span><span class="cp-info-value" style="font-size:0.85rem">×${r.coeff.toFixed(2)}</span></div>
+            <div class="cp-info"><span class="cp-info-label">Vitesse${r.segActual ? ' ✓' : ''}</span><span class="cp-info-value${r.segActual ? ' actual' : ''}">${r.speedSeg.toFixed(1)} km/h</span></div>`;
         }
 
-        // ── Section Cumulé ──
         const cumulMins = i > 0 ? (r.arrMs - START_MS) / 60_000 : 0;
         cells += `<div class="cp-section">Cumulé</div>`;
         if (i > 0) {
-            cells += `
-            <div class="cp-info">
-                <span class="cp-info-label">Temps</span>
-                <span class="cp-info-value">${fmtDur(cumulMins)}</span>
-            </div>`;
+            cells += `<div class="cp-info"><span class="cp-info-label">Temps</span><span class="cp-info-value">${fmtDur(cumulMins)}</span></div>`;
         }
         cells += `
-            <div class="cp-info">
-                <span class="cp-info-label">D+</span>
-                <span class="cp-info-value">${cp.dplus.toLocaleString('fr-FR')} m</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">D−</span>
-                <span class="cp-info-value">${cp.dminus.toLocaleString('fr-FR')} m</span>
-            </div>`;
+            <div class="cp-info"><span class="cp-info-label">D+</span><span class="cp-info-value">${cp.dplus.toLocaleString('fr-FR')} m</span></div>
+            <div class="cp-info"><span class="cp-info-label">D−</span><span class="cp-info-value">${cp.dminus.toLocaleString('fr-FR')} m</span></div>`;
         if (i > 0) {
-            cells += `
-            <div class="cp-info">
-                <span class="cp-info-label">Vit. moyenne</span>
-                <span class="cp-info-value">${r.speedCum.toFixed(1)} km/h</span>
-            </div>`;
+            cells += `<div class="cp-info"><span class="cp-info-label">Vit. moyenne</span><span class="cp-info-value">${r.speedCum.toFixed(1)} km/h</span></div>`;
         }
 
         if (cp.type !== 'depart') {
@@ -725,10 +584,8 @@ function update() {
             <div class="cp-info" style="grid-column:1/-1">
                 <span class="cp-info-label">Saisir heure réelle</span>
                 <div style="display:flex;gap:0.35rem;align-items:center">
-                    <input type="time" class="actual-input${hasActual ? ' is-set' : ''}"
-                           value="${inputVal}"
-                           oninput="setActual(${i}, this.value)"
-                           onchange="setActual(${i}, this.value)">
+                    <input type="time" class="actual-input${hasActual ? ' is-set' : ''}" value="${inputVal}"
+                           oninput="setActual(${i}, this.value)" onchange="setActual(${i}, this.value)">
                     ${clearBtn}
                 </div>
             </div>`;
@@ -749,8 +606,6 @@ function update() {
                 ? '<span class="cp-badge badge-supplies-water" title="Eau"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle"><circle cx="10" cy="10" r="10" fill="#0369a1"/><path d="M6.5,5 L13.5,5 L12,15.5 L8,15.5 Z" fill="none" stroke="white" stroke-width="1.4" stroke-linejoin="round"/></svg></span>'
                 : cp.supplies === 'solid'
                 ? '<span class="cp-badge badge-supplies-solid" title="Eau + solide"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle"><circle cx="10" cy="10" r="10" fill="#b45309"/><g transform="rotate(-25,10,10)" stroke="white" stroke-linecap="round" fill="none"><line x1="10" y1="9" x2="10" y2="17" stroke-width="1.5"/><line x1="8.5" y1="3" x2="8.5" y2="7.5" stroke-width="1.1"/><line x1="10" y1="3" x2="10" y2="9" stroke-width="1.1"/><line x1="11.5" y1="3" x2="11.5" y2="7.5" stroke-width="1.1"/><path d="M8.5,7.5 Q10,9 11.5,7.5" stroke-width="1.1"/></g><g transform="rotate(25,10,10)" stroke="white" stroke-linecap="round" fill="none"><line x1="10" y1="3" x2="10" y2="17" stroke-width="1.5"/><path d="M10,3 C12.5,5 12.5,7.5 10,9" stroke-width="1.1"/></g></svg></span>'
-                : cp.supplies === 'base'
-                ? '<span class="cp-badge badge-supplies-base" title="Repas complet"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle"><circle cx="10" cy="10" r="10" fill="#7c3aed"/><circle cx="10" cy="11" r="4.5" fill="none" stroke="white" stroke-width="1.2"/><line x1="5" y1="4" x2="5" y2="17" stroke="white" stroke-width="1.3" stroke-linecap="round"/><line x1="4" y1="4" x2="4" y2="7.5" stroke="white" stroke-width="1" stroke-linecap="round"/><line x1="6" y1="4" x2="6" y2="7.5" stroke="white" stroke-width="1" stroke-linecap="round"/><path d="M4,7.5 Q5,9 6,7.5" fill="none" stroke="white" stroke-width="1" stroke-linecap="round"/><line x1="15" y1="4" x2="15" y2="17" stroke="white" stroke-width="1.3" stroke-linecap="round"/><path d="M15,4 C17,5.5 17,8 15,9" fill="none" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></span>'
                 : ''}
                 ${cp.stop > 0 ? `<span style="margin-left:auto;font-size:0.8rem;color:var(--text-muted)">⏸ ${cp.stop} min</span>` : ''}
                 <span class="cp-chevron">▾</span>
@@ -759,18 +614,15 @@ function update() {
                 <div class="cp-body">${cells}</div>
                 ${cutoffHtml}
                 ${i > 0 ? `<div class="mini-profile-wrap" style="position:relative;border-radius:0.4rem;overflow:hidden;margin:0 1rem 0.75rem">
-                    <img src="profile.png" style="width:100%;display:block;opacity:0.85">
+                    <img src="profile-42.png" style="width:100%;display:block;opacity:0.85" onerror="this.style.display='none'">
                     ${buildMiniOverlay(i)}
                 </div>` : ''}
                 <div class="cp-tip">💡 ${cp.tip}</div>
             </div>`;
-        card.querySelector('.cp-header').addEventListener('click', () => {
-            card.classList.toggle('collapsed');
-        });
+        card.querySelector('.cp-header').addEventListener('click', () => card.classList.toggle('collapsed'));
         container.appendChild(card);
     });
 
-    // ── Résumé ─────────────────────────────────────────────────────────────────
     const tbody = document.getElementById('summary-body');
     tbody.innerHTML = '';
     CPS.forEach((cp, i) => {
@@ -778,29 +630,21 @@ function update() {
         const night = isNight(r.arrMs);
         const hasAct = actualTimes[i] !== null;
         const timeClass = hasAct ? 't-actual' : (night ? 't-night' : 't-day');
-        const depMs = r.depMs;
-        const distStr = i > 0 ? `${(cp.km - CPS[i-1].km).toFixed(1)} km` : '—';
-        const segStr = i > 0 ? fmtDur(r.segMins) : '—';
-        const cumStr = i > 0 ? fmtDur((r.arrMs - START_MS) / 60_000) : '—';
-        const rowClass = cp.type === 'base1' || cp.type === 'base2' ? 'base-row'
-                       : cp.type === 'depart' ? 'depart-row'
-                       : cp.type === 'arrivee' ? 'arrivee-row' : '';
-        const depStr = cp.stop > 0 ? `<span style="color:var(--text-muted)">${cp.stop} min</span>` : '—';
+        const rowClass = cp.type === 'depart' ? 'depart-row' : cp.type === 'arrivee' ? 'arrivee-row' : '';
         const tr = document.createElement('tr');
         if (rowClass) tr.className = rowClass;
         tr.innerHTML = `
             <td style="color:var(--text-muted);font-size:0.8rem">${cp.km}</td>
             <td style="font-weight:600">${cp.maps ? `<a href="${cp.maps}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--text-muted)">${cp.name}</a>` : cp.name}</td>
             <td class="${timeClass}">${fmtTime(r.arrMs)}</td>
-            <td>${depStr}</td>
-            <td style="color:var(--text-muted)">${distStr}</td>
-            <td style="color:var(--text-muted)">${segStr}</td>
-            <td style="color:var(--text-muted)">${cumStr}</td>`;
+            <td>${cp.stop > 0 ? `<span style="color:var(--text-muted)">${cp.stop} min</span>` : '—'}</td>
+            <td style="color:var(--text-muted)">${i > 0 ? `${(cp.km - CPS[i-1].km).toFixed(1)} km` : '—'}</td>
+            <td style="color:var(--text-muted)">${i > 0 ? fmtDur(r.segMins) : '—'}</td>
+            <td style="color:var(--text-muted)">${i > 0 ? fmtDur((r.arrMs - START_MS) / 60_000) : '—'}</td>`;
         tbody.appendChild(tr);
     });
 }
 
-// ── Thème ──────────────────────────────────────────────────────────────────────
 function toggleTheme() {
     const html = document.documentElement;
     const isDark = html.classList.contains('dark') ||
@@ -809,7 +653,6 @@ function toggleTheme() {
     html.classList.toggle('light', isDark);
 }
 
-// ── Init ───────────────────────────────────────────────────────────────────────
 update();
 </script>
 </body>

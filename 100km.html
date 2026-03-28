@@ -103,8 +103,8 @@
             border-radius: 0.75rem; overflow: hidden;
         }
         .cp-card.base-vie { border-color: var(--base-vie); border-width: 2px; }
-        .cp-card.depart   { border-color: var(--accent);   border-width: 2px; }
-        .cp-card.arrivee  { border-color: var(--green);    border-width: 2px; }
+        .cp-card.depart   { border-color: var(--green);    border-width: 2px; }
+        .cp-card.arrivee  { border-color: var(--red);      border-width: 2px; }
         .cp-header {
             display: flex; align-items: center; gap: 0.6rem;
             padding: 0.7rem 1rem; background: var(--surface2);
@@ -126,10 +126,10 @@
             border-radius: 999px; font-weight: 600;
         }
         .badge-ravito  { background: var(--accent-light);   color: var(--accent);   }
-        .badge-depart  { background: var(--accent-light);   color: var(--accent);   }
-        .badge-arrivee { background: var(--green-light);    color: var(--green);    }
-        .badge-supplies-water { background: #e0f2fe; color: #0369a1; }
-        .badge-supplies-solid { background: #fef9c3; color: #854d0e; }
+        .badge-depart  { background: var(--green-light);    color: var(--green);    }
+        .badge-arrivee { background: var(--red-light);      color: var(--red);      }
+        .badge-supplies-water { background: #f1f5f9; color: #0369a1; }
+        .badge-supplies-solid { background: #f1f5f9; color: #b45309; }
         .night-indicator {
             display: inline-flex; align-items: center; gap: 0.2rem;
             padding: 0.15rem 0.5rem; border-radius: 999px;
@@ -165,7 +165,8 @@
             vertical-align: middle;
         }
         .summary-table tr:last-child td { border-bottom: none; }
-        .summary-table tr.arrivee-row { background: var(--green-light); font-weight: 700; }
+        .summary-table tr.depart-row { background: var(--green-light); font-weight: 700; }
+        .summary-table tr.arrivee-row { background: var(--red-light); font-weight: 700; }
         .summary-table .t-actual { color: var(--green); font-weight: 700; }
         .summary-table .t-night  { color: #6366f1; }
         .summary-table .t-day    { color: #d97706; }
@@ -248,6 +249,7 @@
 <nav class="race-nav">
     <a href="index.html">Western 165</a>
     <a href="100km.html" class="active">La Garde 100</a>
+    <a href="42km.html">La Riviera 42</a>
 </nav>
 
 <div class="profile-wrap">
@@ -417,8 +419,10 @@ function buildMainOverlay() {
     CPS.forEach((cp) => {
         const x = OX(cp.km).toFixed(1);
         const y = OY(altAt(cp.km)).toFixed(1);
-        const isEnd = cp.type === 'depart' || cp.type === 'arrivee';
-        const col = isEnd ? 'var(--green)' : 'rgba(80,80,80,0.55)';
+        const isDepart = cp.type === 'depart';
+        const isArrivee = cp.type === 'arrivee';
+        const isEnd = isDepart || isArrivee;
+        const col = isDepart ? 'var(--green)' : isArrivee ? 'var(--red)' : 'rgba(80,80,80,0.55)';
         out += `<line x1="${x}" y1="28" x2="${x}" y2="282" stroke="${col}" stroke-width="${isEnd ? 2 : 1}" stroke-dasharray="${isEnd ? '' : '4,3'}"/>`;
         out += `<circle cx="${x}" cy="${y}" r="${isEnd ? 5 : 3.5}" fill="${col}" stroke="white" stroke-width="1.5"/>`;
     });
@@ -680,9 +684,9 @@ function update() {
                 <span class="cp-badge ${badgeClass}">${typeLabel}</span>
                 <span class="night-indicator ${night ? 'night' : 'day'}">${night ? '🌙 Nuit' : '☀️ Jour'}</span>
                 ${cp.supplies === 'water'
-                ? '<span class="cp-badge badge-supplies-water"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:3px"><circle cx="10" cy="10" r="10" fill="#3a3a3a"/><path d="M6.5,5 L13.5,5 L12,15.5 L8,15.5 Z" fill="none" stroke="white" stroke-width="1.4" stroke-linejoin="round"/></svg>Eau</span>'
+                ? '<span class="cp-badge badge-supplies-water" title="Eau"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle"><circle cx="10" cy="10" r="10" fill="#0369a1"/><path d="M6.5,5 L13.5,5 L12,15.5 L8,15.5 Z" fill="none" stroke="white" stroke-width="1.4" stroke-linejoin="round"/></svg></span>'
                 : cp.supplies === 'solid'
-                ? '<span class="cp-badge badge-supplies-solid"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:3px"><circle cx="10" cy="10" r="10" fill="#3a3a3a"/><g transform="rotate(-25,10,10)" stroke="white" stroke-linecap="round" fill="none"><line x1="10" y1="9" x2="10" y2="17" stroke-width="1.5"/><line x1="8.5" y1="3" x2="8.5" y2="7.5" stroke-width="1.1"/><line x1="10" y1="3" x2="10" y2="9" stroke-width="1.1"/><line x1="11.5" y1="3" x2="11.5" y2="7.5" stroke-width="1.1"/><path d="M8.5,7.5 Q10,9 11.5,7.5" stroke-width="1.1"/></g><g transform="rotate(25,10,10)" stroke="white" stroke-linecap="round" fill="none"><line x1="10" y1="3" x2="10" y2="17" stroke-width="1.5"/><path d="M10,3 C12.5,5 12.5,7.5 10,9" stroke-width="1.1"/></g></svg>Eau + solide</span>'
+                ? '<span class="cp-badge badge-supplies-solid" title="Eau + solide"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle"><circle cx="10" cy="10" r="10" fill="#b45309"/><g transform="rotate(-25,10,10)" stroke="white" stroke-linecap="round" fill="none"><line x1="10" y1="9" x2="10" y2="17" stroke-width="1.5"/><line x1="8.5" y1="3" x2="8.5" y2="7.5" stroke-width="1.1"/><line x1="10" y1="3" x2="10" y2="9" stroke-width="1.1"/><line x1="11.5" y1="3" x2="11.5" y2="7.5" stroke-width="1.1"/><path d="M8.5,7.5 Q10,9 11.5,7.5" stroke-width="1.1"/></g><g transform="rotate(25,10,10)" stroke="white" stroke-linecap="round" fill="none"><line x1="10" y1="3" x2="10" y2="17" stroke-width="1.5"/><path d="M10,3 C12.5,5 12.5,7.5 10,9" stroke-width="1.1"/></g></svg></span>'
                 : ''}
                 ${cp.stop > 0 ? `<span style="margin-left:auto;font-size:0.8rem;color:var(--text-muted)">⏸ ${cp.stop} min</span>` : ''}
                 <span class="cp-chevron">▾</span>
@@ -713,7 +717,7 @@ function update() {
         const distStr = i > 0 ? `${(cp.km - CPS[i-1].km).toFixed(1)} km` : '—';
         const segStr  = i > 0 ? fmtDur(r.segMins) : '—';
         const cumStr  = i > 0 ? fmtDur((r.arrMs - START_MS) / 60_000) : '—';
-        const rowClass = cp.type === 'arrivee' ? 'arrivee-row' : '';
+        const rowClass = cp.type === 'depart' ? 'depart-row' : cp.type === 'arrivee' ? 'arrivee-row' : '';
         const depStr = cp.stop > 0 ? `<span style="color:var(--text-muted)">${cp.stop} min</span>` : '—';
         const tr = document.createElement('tr');
         if (rowClass) tr.className = rowClass;
