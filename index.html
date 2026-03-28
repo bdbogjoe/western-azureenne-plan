@@ -145,6 +145,25 @@
             padding-top: 0.4rem; margin-top: 0.1rem;
         }
         .cp-section:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+        .summary-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 0.88rem; margin-top: 0.5rem;
+        }
+        .summary-table th {
+            text-align: left; font-size: 0.68rem; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--text-muted); font-weight: 700;
+            padding: 0.3rem 0.5rem; border-bottom: 2px solid var(--border);
+        }
+        .summary-table td {
+            padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        .summary-table tr:last-child td { border-bottom: none; }
+        .summary-table tr.base-row { background: var(--base-vie-light); }
+        .summary-table tr.arrivee-row { background: var(--green-light); font-weight: 700; }
+        .summary-table .t-actual { color: var(--green); font-weight: 700; }
+        .summary-table .t-night  { color: #6366f1; }
+        .summary-table .t-day    { color: #d97706; }
         .cp-info-label {
             font-size: 0.68rem; text-transform: uppercase;
             letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600;
@@ -264,6 +283,23 @@
 </div>
 
 <div class="checkpoints" id="checkpoints"></div>
+
+<div class="controls" id="summary-wrap" style="margin-top:1.5rem">
+    <div class="controls-label">📋 Résumé des temps de passage</div>
+    <table class="summary-table" id="summary-table">
+        <thead>
+            <tr>
+                <th>Km</th>
+                <th>Checkpoint</th>
+                <th>Arrivée</th>
+                <th>Départ</th>
+                <th>Segment</th>
+                <th>Cumulé</th>
+            </tr>
+        </thead>
+        <tbody id="summary-body"></tbody>
+    </table>
+</div>
 
 <footer>
     Plan de course personnel · Données roadbook officiel Western Azuréenne 2026<br>
@@ -681,6 +717,32 @@ function update() {
             </div>` : ''}
             <div class="cp-tip">💡 ${cp.tip}</div>`;
         container.appendChild(card);
+    });
+
+    // ── Résumé ─────────────────────────────────────────────────────────────────
+    const tbody = document.getElementById('summary-body');
+    tbody.innerHTML = '';
+    CPS.forEach((cp, i) => {
+        const r = res[i];
+        const night = isNight(r.arrMs);
+        const hasAct = actualTimes[i] !== null;
+        const timeClass = hasAct ? 't-actual' : (night ? 't-night' : 't-day');
+        const depMs = r.depMs;
+        const segStr = i > 0 ? fmtDur(r.segMins) : '—';
+        const cumStr = i > 0 ? fmtDur((r.arrMs - START_MS) / 60_000) : '—';
+        const rowClass = cp.type === 'base1' || cp.type === 'base2' ? 'base-row'
+                       : cp.type === 'arrivee' ? 'arrivee-row' : '';
+        const depStr = cp.stop > 0 ? `<span style="color:var(--text-muted)">${fmtTime(depMs)}</span>` : '—';
+        const tr = document.createElement('tr');
+        if (rowClass) tr.className = rowClass;
+        tr.innerHTML = `
+            <td style="color:var(--text-muted);font-size:0.8rem">${cp.km}</td>
+            <td style="font-weight:600">${cp.name}</td>
+            <td class="${timeClass}">${fmtTime(r.arrMs)}</td>
+            <td>${depStr}</td>
+            <td style="color:var(--text-muted)">${segStr}</td>
+            <td style="color:var(--text-muted)">${cumStr}</td>`;
+        tbody.appendChild(tr);
     });
 }
 
