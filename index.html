@@ -292,7 +292,7 @@
                 <th>Km</th>
                 <th>Checkpoint</th>
                 <th>Arrivée</th>
-                <th>Départ</th>
+                <th>Pause</th>
                 <th>Segment</th>
                 <th>Cumulé</th>
             </tr>
@@ -732,7 +732,7 @@ function update() {
         const cumStr = i > 0 ? fmtDur((r.arrMs - START_MS) / 60_000) : '—';
         const rowClass = cp.type === 'base1' || cp.type === 'base2' ? 'base-row'
                        : cp.type === 'arrivee' ? 'arrivee-row' : '';
-        const depStr = cp.stop > 0 ? `<span style="color:var(--text-muted)">${fmtTime(depMs)}</span>` : '—';
+        const depStr = cp.stop > 0 ? `<span style="color:var(--text-muted)">${cp.stop} min</span>` : '—';
         const tr = document.createElement('tr');
         if (rowClass) tr.className = rowClass;
         tr.innerHTML = `
