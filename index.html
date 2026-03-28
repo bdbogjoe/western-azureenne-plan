@@ -363,16 +363,31 @@ function segKe(kmDelta, dplusDelta) { return kmDelta + dplusDelta / 100; }
 function calculate(coeff) {
     const pace = BASE_PACE * coeff; // min/ke
     let ms = START_MS;
-    return CPS.map((cp, i) => {
-        if (i === 0) return { arrMs: ms, segMins: 0, ke: 0 };
-        const prev = CPS[i - 1];
+    const results = [];
+    CPS.forEach((cp, i) => {
+        if (i === 0) {
+            results.push({ arrMs: ms, depMs: ms, segMins: 0, ke: 0, segActual: false });
+            return;
+        }
+        const prev    = CPS[i - 1];
         const ke      = segKe(cp.km - prev.km, cp.dplus - prev.dplus);
         const segMins = ke * pace;
-        ms += (prev.stop + segMins) * 60_000;
-        // Si un temps réel est saisi pour ce checkpoint, il devient le nouvel ancrage
-        if (actualTimes[i] !== null) ms = actualTimes[i];
-        return { arrMs: ms, segMins, ke };
+        const prevDep = results[i - 1].depMs; // heure de départ du checkpoint précédent
+
+        let arrMs      = prevDep + segMins * 60_000;
+        let realSeg    = segMins;
+        let segActual  = false;
+
+        if (actualTimes[i] !== null) {
+            arrMs     = actualTimes[i];
+            realSeg   = (actualTimes[i] - prevDep) / 60_000; // tps réel sur le segment
+            segActual = true;
+        }
+
+        results.push({ arrMs, depMs: arrMs + cp.stop * 60_000, segMins: realSeg, ke, segActual });
+        ms = arrMs;
     });
+    return results;
 }
 
 // ── Rendu ──────────────────────────────────────────────────────────────────────
@@ -457,8 +472,8 @@ function update() {
                 <span class="cp-info-value">${fmtDur(cumulMins)}</span>
             </div>
             <div class="cp-info">
-                <span class="cp-info-label">Tps segment</span>
-                <span class="cp-info-value">${fmtDur(r.segMins)}</span>
+                <span class="cp-info-label">Tps segment${r.segActual ? ' ✓' : ''}</span>
+                <span class="cp-info-value${r.segActual ? ' actual' : ''}">${fmtDur(r.segMins)}</span>
             </div>
             <div class="cp-info">
                 <span class="cp-info-label">ke segment</span>
