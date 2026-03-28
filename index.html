@@ -384,7 +384,12 @@ function calculate(coeff) {
             segActual = true;
         }
 
-        results.push({ arrMs, depMs: arrMs + cp.stop * 60_000, segMins: realSeg, ke, segActual });
+        const segKm    = cp.km - prev.km;
+        const cumulKm  = cp.km;
+        const speedSeg = segKm  / (realSeg / 60);                          // km/h segment
+        const speedCum = cumulKm / ((arrMs - START_MS) / 3_600_000);      // km/h depuis départ
+
+        results.push({ arrMs, depMs: arrMs + cp.stop * 60_000, segMins: realSeg, ke, segActual, speedSeg, speedCum });
         ms = arrMs;
     });
     return results;
@@ -478,6 +483,14 @@ function update() {
             <div class="cp-info">
                 <span class="cp-info-label">ke segment</span>
                 <span class="cp-info-value">${r.ke.toFixed(1)} ke</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">Vit. segment${r.segActual ? ' ✓' : ''}</span>
+                <span class="cp-info-value${r.segActual ? ' actual' : ''}">${r.speedSeg.toFixed(1)} km/h</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">Vit. moyenne</span>
+                <span class="cp-info-value">${r.speedCum.toFixed(1)} km/h</span>
             </div>`;
         }
         if (cp.stop > 0) {
