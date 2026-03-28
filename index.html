@@ -134,8 +134,22 @@
             letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600;
         }
         .cp-info-value { font-size: 1rem; font-weight: 700; }
-        .cp-info-value.night { color: #6366f1; }
-        .cp-info-value.day   { color: #d97706; }
+        .cp-info-value.night  { color: #6366f1; }
+        .cp-info-value.day    { color: #d97706; }
+        .cp-info-value.actual { color: var(--green); }
+        .actual-input {
+            font-family: inherit; font-size: 0.9rem; font-weight: 600;
+            border: 1px solid var(--border); border-radius: 0.4rem;
+            padding: 0.2rem 0.4rem; background: var(--bg); color: var(--text);
+            width: 100px;
+        }
+        .actual-input.is-set { border-color: var(--green); color: var(--green); }
+        .clear-btn {
+            background: none; border: none; cursor: pointer;
+            color: var(--text-muted); font-size: 0.85rem;
+            padding: 0.1rem 0.3rem; line-height: 1;
+        }
+        .clear-btn:hover { color: var(--red); }
         .cutoff-bar {
             margin: 0 1rem 0.75rem; border-radius: 0.5rem;
             padding: 0.5rem 0.75rem; font-size: 0.85rem;
@@ -313,6 +327,35 @@ function fmtMargin(marginMins) {
     return marginMins >= 0 ? `+${str} sur barrière` : `−${str} — DÉPASSÉE`;
 }
 
+// ── Temps réels saisis par l'utilisateur (null = pas encore passé) ────────────
+const actualTimes = new Array(CPS.length).fill(null);
+
+function msToHHMM(ms) {
+    const d = new Date(ms);
+    return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function setActual(i, value) {
+    actualTimes[i] = null; // effacer avant de recalculer l'estimé de référence
+    if (value) {
+        const coeff = parseInt(document.getElementById('coeff-slider').value) / 100;
+        const estMs = calculate(coeff)[i].arrMs; // estimé basé sur les actuals précédents
+        const [hh, mm] = value.split(':').map(Number);
+        const ref = new Date(estMs);
+        ref.setHours(hh, mm, 0, 0);
+        // Ajustement de jour si besoin (ex: "01:30" peut être le lendemain de "23:45")
+        if (ref.getTime() < estMs - 12 * 3600_000) ref.setDate(ref.getDate() + 1);
+        if (ref.getTime() > estMs + 18 * 3600_000) ref.setDate(ref.getDate() - 1);
+        actualTimes[i] = ref.getTime();
+    }
+    update();
+}
+
+function clearActual(i) {
+    actualTimes[i] = null;
+    update();
+}
+
 // ── Calcul ─────────────────────────────────────────────────────────────────────
 // ke = km + D+(m) / 100
 function segKe(kmDelta, dplusDelta) { return kmDelta + dplusDelta / 100; }
@@ -323,9 +366,11 @@ function calculate(coeff) {
     return CPS.map((cp, i) => {
         if (i === 0) return { arrMs: ms, segMins: 0, ke: 0 };
         const prev = CPS[i - 1];
-        const ke   = segKe(cp.km - prev.km, cp.dplus - prev.dplus);
+        const ke      = segKe(cp.km - prev.km, cp.dplus - prev.dplus);
         const segMins = ke * pace;
         ms += (prev.stop + segMins) * 60_000;
+        // Si un temps réel est saisi pour ce checkpoint, il devient le nouvel ancrage
+        if (actualTimes[i] !== null) ms = actualTimes[i];
         return { arrMs: ms, segMins, ke };
     });
 }
@@ -371,11 +416,35 @@ function update() {
         }
 
         // Body cells
+        const hasActual = actualTimes[i] !== null;
+        const timeLabel = hasActual ? 'Heure réelle ✓' : 'Arrivée estimée';
+        const timeClass = hasActual ? 'actual' : (night ? 'night' : 'day');
+        const inputVal  = hasActual ? msToHHMM(actualTimes[i]) : '';
+        const clearBtn  = hasActual
+            ? `<button class="clear-btn" onclick="clearActual(${i})" title="Effacer">✕</button>`
+            : '';
+
         let cells = `
             <div class="cp-info">
-                <span class="cp-info-label">Arrivée estimée</span>
-                <span class="cp-info-value ${night ? 'night' : 'day'}">${fmtTime(r.arrMs)}</span>
-            </div>
+                <span class="cp-info-label">${timeLabel}</span>
+                <span class="cp-info-value ${timeClass}">${fmtTime(r.arrMs)}</span>
+            </div>`;
+
+        if (cp.type !== 'depart') {
+            cells += `
+            <div class="cp-info">
+                <span class="cp-info-label">Saisir heure réelle</span>
+                <div style="display:flex;gap:0.35rem;align-items:center">
+                    <input type="time" class="actual-input${hasActual ? ' is-set' : ''}"
+                           value="${inputVal}"
+                           oninput="setActual(${i}, this.value)"
+                           onchange="setActual(${i}, this.value)">
+                    ${clearBtn}
+                </div>
+            </div>`;
+        }
+
+        cells += `
             <div class="cp-info">
                 <span class="cp-info-label">D+ cumulé</span>
                 <span class="cp-info-value">${cp.dplus.toLocaleString('fr-FR')} m</span>
