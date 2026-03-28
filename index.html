@@ -654,13 +654,6 @@ function update() {
                 </div>
             </div>`;
         }
-        if (cp.stop > 0) {
-            cells += `
-            <div class="cp-info">
-                <span class="cp-info-label">Arrêt prévu</span>
-                <span class="cp-info-value">${cp.stop} min</span>
-            </div>`;
-        }
 
         const card = document.createElement('div');
         card.className = cardClass;
