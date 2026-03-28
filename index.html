@@ -297,6 +297,7 @@
                 <th>Checkpoint</th>
                 <th>Arrivée</th>
                 <th>Pause</th>
+                <th>Dist.</th>
                 <th>Segment</th>
                 <th>Cumulé</th>
             </tr>
@@ -734,6 +735,7 @@ function update() {
         const hasAct = actualTimes[i] !== null;
         const timeClass = hasAct ? 't-actual' : (night ? 't-night' : 't-day');
         const depMs = r.depMs;
+        const distStr = i > 0 ? `${(cp.km - CPS[i-1].km).toFixed(1)} km` : '—';
         const segStr = i > 0 ? fmtDur(r.segMins) : '—';
         const cumStr = i > 0 ? fmtDur((r.arrMs - START_MS) / 60_000) : '—';
         const rowClass = cp.type === 'base1' || cp.type === 'base2' ? 'base-row'
@@ -746,6 +748,7 @@ function update() {
             <td style="font-weight:600">${cp.name}</td>
             <td class="${timeClass}">${fmtTime(r.arrMs)}</td>
             <td>${depStr}</td>
+            <td style="color:var(--text-muted)">${distStr}</td>
             <td style="color:var(--text-muted)">${segStr}</td>
             <td style="color:var(--text-muted)">${cumStr}</td>`;
         tbody.appendChild(tr);
