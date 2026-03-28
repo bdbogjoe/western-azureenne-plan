@@ -323,62 +323,62 @@ function cutoff(isoStr) { return new Date(isoStr).getTime(); }
 const CPS = [
     {
         km: 0,     dplus: 0,    dminus: 0,    name: 'Grimaud',           type: 'depart',
-        stop: 0,   cutoff: null, supplies: null,
+        stop: 0,   cutoff: null, supplies: null, maps: 'https://maps.google.com/?q=43.2745,6.5225',
         tip: 'Départ 22h00 — vérification matériel obligatoire. Lampe frontale indispensable dès le départ. Gérer le départ groupé, ne pas partir trop vite.',
     },
     {
         km: 19.2,  dplus: 517,  dminus: 577,  name: 'Sainte-Maxime',     type: 'ravito',
-        stop: 5,   cutoff: cutoff('2026-04-11T02:00:00'), supplies: 'solid',
+        stop: 5,   cutoff: cutoff('2026-04-11T02:00:00'), supplies: 'solid', maps: 'https://maps.google.com/?q=43.3087,6.6385',
         tip: 'Premier ravito. Nuit noire — vérifier lampe frontale. Remplir flasques, manger solide. Barrière à 02h00, large marge attendue au départ.',
     },
     {
         km: 34.4,  dplus: 1132, dminus: 1003, name: 'Col de Gratteloup', type: 'ravito',
-        stop: 10,   cutoff: null, supplies: 'water',
+        stop: 10,   cutoff: null, supplies: 'water', maps: 'https://maps.google.com/?q=43.1714,6.3319',
         tip: 'Eau seulement — prévoir sa propre alimentation. Col technique. Belle vue au lever du soleil si timing ok.',
     },
     {
         km: 47.7,  dplus: 1569, dminus: 1590, name: 'Le Plan de la Tour', type: 'ravito',
-        stop: 10,   cutoff: cutoff('2026-04-11T09:30:00'), supplies: 'solid',
+        stop: 10,   cutoff: cutoff('2026-04-11T09:30:00'), supplies: 'solid', maps: 'https://maps.google.com/?q=43.3384,6.5454',
         tip: 'Ravito solide — faire le plein avant le long segment vers La Garde-Freinet. Barrière 09h30, surveiller la marge.',
     },
     {
         km: 61.6,  dplus: 2052, dminus: 1805, name: 'La Garde-Freinet',  type: 'base1',
-        stop: 30,  cutoff: cutoff('2026-04-11T13:00:00'), supplies: 'base',
+        stop: 30,  cutoff: cutoff('2026-04-11T13:00:00'), supplies: 'base', maps: 'https://maps.google.com/?q=43.3176,6.4699',
         tip: 'BASE VIE. Récupérer sac de délestage. Soins pieds si nécessaire. Manger chaud. Ne dormir que si marge > 2h sur barrière.',
     },
     {
         km: 82.6,  dplus: 2793, dminus: 2700, name: 'Col du Périer',     type: 'ravito',
-        stop: 10,   cutoff: null, supplies: 'solid',
+        stop: 10,   cutoff: null, supplies: 'solid', maps: 'https://maps.google.com/?q=43.2551,6.4262',
         tip: 'Ravito solide. Section longue après la base vie — rythme souvent ralenti, c\'est normal. Gérer l\'hydratation en après-midi.',
     },
     {
         km: 95.1,  dplus: 3004, dminus: 3070, name: 'La Môle',           type: 'base2',
-        stop: 30,  cutoff: cutoff('2026-04-11T21:00:00'), supplies: 'base',
+        stop: 30,  cutoff: cutoff('2026-04-11T21:00:00'), supplies: 'base', maps: 'https://maps.google.com/?q=43.2069,6.4653',
         tip: 'BASE VIE. Récupérer sac de délestage. Se préparer pour la nuit : vêtements chauds, nouvelle lampe. Barrière serrée à 21h00 — ne pas traîner.',
     },
     {
         km: 105,   dplus: 3552, dminus: 3374, name: 'Col de Canadel',    type: 'ravito',
-        stop: 10,   cutoff: null, supplies: 'water',
+        stop: 10,   cutoff: null, supplies: 'water', maps: 'https://maps.google.com/?q=43.1689,6.4749',
         tip: 'Eau seulement — prévoir alimentation personnelle. Nuit tombée. Garder le cap et la concentration. Section de montée — rythme posé.',
     },
     {
         km: 117.6, dplus: 3757, dminus: 3804, name: 'Plage de la Douane', type: 'ravito',
-        stop: 10,   cutoff: cutoff('2026-04-12T02:30:00'), supplies: 'solid',
+        stop: 10,   cutoff: cutoff('2026-04-12T02:30:00'), supplies: 'solid', maps: 'https://maps.google.com/?q=43.1874,6.5517',
         tip: 'Ravito solide. Point de bascule — la mer ! 2h30 du matin : moment dur psychologiquement. Tenir bon, le plus dur est derrière. Barrière à 02h30 dim.',
     },
     {
         km: 130.4, dplus: 4189, dminus: 4224, name: "Val d'Astier",      type: 'ravito',
-        stop: 10,   cutoff: null, supplies: 'water',
+        stop: 10,   cutoff: null, supplies: 'water', maps: 'https://maps.google.com/?q=43.2518,6.5326',
         tip: 'Eau seulement — prévoir alimentation personnelle. L\'aube approche, tenir jusqu\'au lever du jour. Manger et boire malgré la fatigue.',
     },
     {
         km: 145.1, dplus: 4812, dminus: 4682, name: 'Gassin',            type: 'ravito',
-        stop: 10,   cutoff: null, supplies: 'solid',
+        stop: 10,   cutoff: null, supplies: 'solid', maps: 'https://maps.google.com/?q=43.2292,6.5855',
         tip: 'Ravito solide. Village médiéval perché — vue imprenable. Plus que 16,5 km ! Gérer l\'allure sur cette fin de course.',
     },
     {
         km: 161.6, dplus: 4907, dminus: 4952, name: 'Arrivée Grimaud',   type: 'arrivee',
-        stop: 0,   cutoff: cutoff('2026-04-12T11:30:00'), supplies: null,
+        stop: 0,   cutoff: cutoff('2026-04-12T11:30:00'), supplies: null, maps: 'https://maps.google.com/?q=43.2745,6.5225',
         tip: 'LIGNE D\'ARRIVÉE. Profitez de chaque mètre des derniers kilomètres !',
     },
 ];
@@ -702,7 +702,7 @@ function update() {
             <div class="cp-header">
                 <span class="cp-km">km ${cp.km}</span>
                 <span class="cp-name-group">
-                    <span class="cp-name">${cp.name}</span>
+                    <span class="cp-name">${cp.maps ? `<a href="${cp.maps}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--text-muted)">${cp.name}</a>` : cp.name}</span>
                     <span class="cp-eta ${hasActual ? 't-actual' : (night ? 't-night' : 't-day')}">${fmtTime(r.arrMs)}</span>
                 </span>
                 <span class="cp-badge ${badgeClass}">${typeLabel}</span>
@@ -745,7 +745,7 @@ function update() {
         if (rowClass) tr.className = rowClass;
         tr.innerHTML = `
             <td style="color:var(--text-muted);font-size:0.8rem">${cp.km}</td>
-            <td style="font-weight:600">${cp.name}</td>
+            <td style="font-weight:600">${cp.maps ? `<a href="${cp.maps}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--text-muted)">${cp.name}</a>` : cp.name}</td>
             <td class="${timeClass}">${fmtTime(r.arrMs)}</td>
             <td>${depStr}</td>
             <td style="color:var(--text-muted)">${distStr}</td>
