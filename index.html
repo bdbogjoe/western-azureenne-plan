@@ -402,7 +402,7 @@ function buildMiniOverlay(hlSeg) {
         const isBorder = i===hlSeg||i===hlSeg-1;
         out += `<line x1="${x}" y1="0" x2="${x}" y2="300" stroke="${isBorder?'var(--accent)':'rgba(100,100,100,0.25)'}" stroke-width="${isBorder?0:0.6}"/>`;
     });
-    return `<svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none">${out}</svg>`;
+    return `<svg viewBox="0 0 1000 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none">${out}</svg>`;
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
