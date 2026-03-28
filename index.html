@@ -215,7 +215,10 @@
 
 <div class="profile-wrap">
     <div class="profile-title">Profil altimétrique · 161,6 km · 4 907 m D+</div>
-    <div id="profile-svg"></div>
+    <div style="position:relative;border-radius:0.4rem;overflow:hidden">
+        <img src="profile.png" style="width:100%;display:block">
+        <div id="profile-overlay"></div>
+    </div>
 </div>
 
 <div class="stats-bar">
@@ -366,87 +369,40 @@ function altAt(km) {
     return before[1] + ((km - before[0]) / (after[0] - before[0])) * (after[1] - before[1]);
 }
 
-function segmentArea(km0, km1, toX, toY, baseY) {
-    const pts = [[km0, altAt(km0)],
-        ...PROFILE_PTS.filter(([k]) => k > km0 && k < km1),
-        [km1, altAt(km1)]];
-    const line = pts.map(([k,a], i) => `${i===0?'M':'L'}${toX(k).toFixed(1)},${toY(a).toFixed(1)}`).join(' ');
-    return { line, area: `${line} L${toX(km1).toFixed(1)},${baseY} L${toX(km0).toFixed(1)},${baseY} Z` };
+// Mapping image 1000×300 px : km 0→x≈22, km 161.6→x≈978, alt 800→y≈30, alt 0→y≈282
+const OX = km  => 22 + (km / 161.6) * 956;
+const OY = alt => 282 - (alt / 800) * 252;
+
+function buildMainOverlay() {
+    let out = '';
+    CPS.forEach((cp, i) => {
+        const x = OX(cp.km).toFixed(1);
+        const y = OY(altAt(cp.km)).toFixed(1);
+        const isBase = cp.type==='base1'||cp.type==='base2';
+        const isEnd  = cp.type==='depart'||cp.type==='arrivee';
+        const col = isBase ? 'var(--base-vie)' : isEnd ? 'var(--green)' : 'rgba(80,80,80,0.55)';
+        out += `<line x1="${x}" y1="28" x2="${x}" y2="282" stroke="${col}" stroke-width="${isBase||isEnd?2:1}" stroke-dasharray="${isBase||isEnd?'':'4,3'}"/>`;
+        out += `<circle cx="${x}" cy="${y}" r="${isBase||isEnd?5:3.5}" fill="${col}" stroke="white" stroke-width="1.5"/>`;
+    });
+    return `<svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none">${out}</svg>`;
 }
 
-function buildProfileSVG(hlSeg) {
-    const W=760, H=155, pL=28, pR=8, pT=10, pB=22;
-    const uw=W-pL-pR, uh=H-pT-pB, maxAlt=800;
-    const toX = km  => pL + (km/161.6)*uw;
-    const toY = alt => pT + (1-alt/maxAlt)*uh;
-    const baseY = (pT+uh).toFixed(1);
-
-    const fullLine = PROFILE_PTS.map(([k,a],i)=>`${i===0?'M':'L'}${toX(k).toFixed(1)},${toY(a).toFixed(1)}`).join(' ');
-    const fullArea = `${fullLine} L${toX(161.6).toFixed(1)},${baseY} L${toX(0).toFixed(1)},${baseY} Z`;
-
-    let grid='';
-    [0,200,400,600,800].forEach(a=>{
-        const y=toY(a).toFixed(1);
-        grid+=`<line x1="${pL}" y1="${y}" x2="${W-pR}" y2="${y}" stroke="var(--border)" stroke-width="0.5"/>
-               <text x="${pL-3}" y="${(+y+3).toFixed(1)}" text-anchor="end" font-size="8" fill="var(--text-muted)" font-family="sans-serif">${a}m</text>`;
-    });
-
-    let segHL='';
-    if (hlSeg>0) {
-        const {line,area}=segmentArea(CPS[hlSeg-1].km,CPS[hlSeg].km,toX,toY,baseY);
-        segHL=`<path d="${area}" fill="var(--accent)" opacity="0.3"/>
-               <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>`;
+function buildMiniOverlay(hlSeg) {
+    let out = '';
+    if (hlSeg > 0) {
+        const x0 = OX(CPS[hlSeg-1].km).toFixed(1);
+        const x1 = OX(CPS[hlSeg].km).toFixed(1);
+        const w  = (+x1 - +x0).toFixed(1);
+        out += `<rect x="${x0}" y="0" width="${w}" height="300" fill="var(--accent)" opacity="0.35"/>`;
+        out += `<line x1="${x0}" y1="0" x2="${x0}" y2="300" stroke="var(--accent)" stroke-width="2.5"/>`;
+        out += `<line x1="${x1}" y1="0" x2="${x1}" y2="300" stroke="var(--accent)" stroke-width="2.5"/>`;
     }
-
-    let markers='';
-    CPS.forEach((cp,i)=>{
-        const x=toX(cp.km).toFixed(1);
-        const y=toY(altAt(cp.km)).toFixed(1);
-        const isHl=i===hlSeg;
-        const isBase=cp.type==='base1'||cp.type==='base2';
-        const isEnd=cp.type==='depart'||cp.type==='arrivee';
-        const col=isHl?'var(--accent)':isBase?'var(--base-vie)':isEnd?'var(--green)':'var(--border)';
-        const lw=isHl||isBase?1.5:0.75;
-        markers+=`<line x1="${x}" y1="${pT}" x2="${x}" y2="${baseY}" stroke="${col}" stroke-width="${lw}" stroke-dasharray="${isHl?'':'3,3'}"/>`;
-        markers+=`<circle cx="${x}" cy="${y}" r="${isHl?5:isBase||isEnd?4:3}" fill="${col}" stroke="var(--surface)" stroke-width="1"/>`;
-        if(cp.type!=='depart')
-            markers+=`<text x="${x}" y="${(pT+uh+15).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="${isHl?'var(--accent)':'var(--text-muted)'}" font-family="sans-serif" font-weight="${isHl?'bold':'normal'}">${cp.km}</text>`;
+    CPS.forEach((cp, i) => {
+        const x = OX(cp.km).toFixed(1);
+        const isBorder = i===hlSeg||i===hlSeg-1;
+        out += `<line x1="${x}" y1="0" x2="${x}" y2="300" stroke="${isBorder?'var(--accent)':'rgba(100,100,100,0.25)'}" stroke-width="${isBorder?0:0.6}"/>`;
     });
-
-    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
-        ${grid}
-        <path d="${fullArea}" fill="var(--accent-light)" opacity="0.45"/>
-        <path d="${fullLine}" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.5"/>
-        ${segHL}${markers}
-    </svg>`;
-}
-
-function buildMiniProfile(hlSeg) {
-    const W=400, H=32, pL=2, pR=2, pT=3, pB=3;
-    const uw=W-pL-pR, uh=H-pT-pB, maxAlt=800;
-    const toX = km  => pL + (km/161.6)*uw;
-    const toY = alt => pT + (1-alt/maxAlt)*uh;
-    const baseY = (pT+uh).toFixed(1);
-
-    const fullLine = PROFILE_PTS.map(([k,a],i)=>`${i===0?'M':'L'}${toX(k).toFixed(1)},${toY(a).toFixed(1)}`).join(' ');
-    const fullArea = `${fullLine} L${toX(161.6).toFixed(1)},${baseY} L${toX(0).toFixed(1)},${baseY} Z`;
-
-    let segHL='';
-    if (hlSeg>0) {
-        const {line,area}=segmentArea(CPS[hlSeg-1].km,CPS[hlSeg].km,toX,toY,baseY);
-        segHL=`<path d="${area}" fill="var(--accent)" opacity="0.5"/>
-               <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.5"/>`;
-    }
-    const dots=CPS.map((cp,i)=>{
-        const isHl=i===hlSeg||i===hlSeg-1;
-        return `<circle cx="${toX(cp.km).toFixed(1)}" cy="${toY(altAt(cp.km)).toFixed(1)}" r="${isHl?2.5:1.2}" fill="${isHl?'var(--accent)':'var(--border)'}"/>`;
-    }).join('');
-
-    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:32px;display:block">
-        <path d="${fullArea}" fill="var(--accent-light)" opacity="0.3"/>
-        <path d="${fullLine}" fill="none" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.5"/>
-        ${segHL}${dots}
-    </svg>`;
+    return `<svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none">${out}</svg>`;
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
@@ -584,7 +540,7 @@ function update() {
     document.getElementById('total-time').textContent =
         `(${fmtDur((last.arrMs - START_MS) / 60_000)} de course)`;
 
-    document.getElementById('profile-svg').innerHTML = buildProfileSVG(-1);
+    document.getElementById('profile-overlay').innerHTML = buildMainOverlay();
 
     const container = document.getElementById('checkpoints');
     container.innerHTML = '';
@@ -692,13 +648,16 @@ function update() {
                 <span class="cp-badge ${badgeClass}">${typeLabel}</span>
                 <span class="night-indicator ${night ? 'night' : 'day'}">${night ? '🌙 Nuit' : '☀️ Jour'}</span>
                 ${cp.supplies === 'water' ? '<span class="cp-badge badge-supplies-water">💧 Eau</span>'
-                : cp.supplies === 'solid' ? '<span class="cp-badge badge-supplies-solid">💧🍴 Eau + solide</span>'
+                : cp.supplies === 'solid' ? `<span class="cp-badge badge-supplies-solid">💧<svg width="13" height="13" viewBox="0 0 13 13" style="vertical-align:middle" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.3"><g transform="rotate(-22 6.5 6.5)"><line x1="4.5" y1="1" x2="4.5" y2="12"/><line x1="3.5" y1="1" x2="3.5" y2="4.5"/><line x1="5.5" y1="1" x2="5.5" y2="4.5"/><path d="M3.5,4.5 Q4.5,6 5.5,4.5"/></g><g transform="rotate(22 6.5 6.5)"><line x1="8.5" y1="1" x2="8.5" y2="12"/><path d="M8.5,1 Q10.5,3 8.5,5.5"/></g></svg> Eau + solide</span>`
                 : cp.supplies === 'base'  ? '<span class="cp-badge badge-supplies-base">🍽️ Repas complet</span>'
                 : ''}
             </div>
             <div class="cp-body">${cells}</div>
             ${cutoffHtml}
-            <div class="mini-profile-wrap">${buildMiniProfile(i)}</div>
+            <div class="mini-profile-wrap" style="position:relative;border-radius:0.4rem;overflow:hidden;margin:0 1rem 0.75rem">
+                <img src="profile.png" style="width:100%;height:44px;object-fit:fill;display:block;opacity:0.85">
+                ${buildMiniOverlay(i)}
+            </div>
             <div class="cp-tip">💡 ${cp.tip}</div>`;
         container.appendChild(card);
     });
