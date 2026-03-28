@@ -511,6 +511,10 @@ function update() {
                 <span class="cp-info-value">${(cp.km - CPS[i-1].km).toFixed(1)} km</span>
             </div>
             <div class="cp-info">
+                <span class="cp-info-label">D+ segment</span>
+                <span class="cp-info-value">${(cp.dplus - CPS[i-1].dplus).toLocaleString('fr-FR')} m</span>
+            </div>
+            <div class="cp-info">
                 <span class="cp-info-label">Tps segment${r.segActual ? ' ✓' : ''}</span>
                 <span class="cp-info-value${r.segActual ? ' actual' : ''}">${fmtDur(r.segMins)}</span>
             </div>
