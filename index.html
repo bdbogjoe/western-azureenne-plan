@@ -210,7 +210,7 @@
 <header>
     <h1>🏔 Western Azuréenne 2026</h1>
     <p class="sub">Grimaud · Vendredi 10 avril 2026 · 22h00</p>
-    <p class="sub">161,6 km · 4 907 m D+ · ~210 km-effort</p>
+    <p class="sub">161,6 km · 4 907 m D+ · 4 907 m D− · ~210 km-effort</p>
 </header>
 
 <div class="profile-wrap">
@@ -272,62 +272,62 @@ function cutoff(isoStr) { return new Date(isoStr).getTime(); }
 // ── Données ────────────────────────────────────────────────────────────────────
 const CPS = [
     {
-        km: 0,     dplus: 0,    name: 'Grimaud',           type: 'depart',
+        km: 0,     dplus: 0,    dminus: 0,    name: 'Grimaud',           type: 'depart',
         stop: 0,   cutoff: null, supplies: null,
         tip: 'Départ 22h00 — vérification matériel obligatoire. Lampe frontale indispensable dès le départ. Gérer le départ groupé, ne pas partir trop vite.',
     },
     {
-        km: 19.2,  dplus: 517,  name: 'Sainte-Maxime',     type: 'ravito',
+        km: 19.2,  dplus: 517,  dminus: 240,  name: 'Sainte-Maxime',     type: 'ravito',
         stop: 5,   cutoff: cutoff('2026-04-11T02:00:00'), supplies: 'solid',
         tip: 'Premier ravito. Nuit noire — vérifier lampe frontale. Remplir flasques, manger solide. Barrière à 02h00, large marge attendue au départ.',
     },
     {
-        km: 34.4,  dplus: 1132, name: 'Col de Gratteloup', type: 'ravito',
+        km: 34.4,  dplus: 1132, dminus: 240,  name: 'Col de Gratteloup', type: 'ravito',
         stop: 5,   cutoff: null, supplies: 'water',
         tip: 'Eau seulement — prévoir sa propre alimentation. Col technique. Belle vue au lever du soleil si timing ok.',
     },
     {
-        km: 47.7,  dplus: 1569, name: 'Le Plan de la Tour', type: 'ravito',
+        km: 47.7,  dplus: 1569, dminus: 765,  name: 'Le Plan de la Tour', type: 'ravito',
         stop: 5,   cutoff: cutoff('2026-04-11T09:30:00'), supplies: 'solid',
         tip: 'Ravito solide — faire le plein avant le long segment vers La Garde-Freinet. Barrière 09h30, surveiller la marge.',
     },
     {
-        km: 61.6,  dplus: 2052, name: 'La Garde-Freinet',  type: 'base1',
+        km: 61.6,  dplus: 2052, dminus: 765,  name: 'La Garde-Freinet',  type: 'base1',
         stop: 30,  cutoff: cutoff('2026-04-11T13:00:00'), supplies: 'base',
         tip: 'BASE VIE. Récupérer sac de délestage. Soins pieds si nécessaire. Manger chaud. Ne dormir que si marge > 2h sur barrière.',
     },
     {
-        km: 82.6,  dplus: 2793, name: 'Col du Périer',     type: 'ravito',
+        km: 82.6,  dplus: 2793, dminus: 1945, name: 'Col du Périer',     type: 'ravito',
         stop: 5,   cutoff: null, supplies: 'solid',
         tip: 'Ravito solide. Section longue après la base vie — rythme souvent ralenti, c\'est normal. Gérer l\'hydratation en après-midi.',
     },
     {
-        km: 95.1,  dplus: 3004, name: 'La Môle',           type: 'base2',
+        km: 95.1,  dplus: 3004, dminus: 3075, name: 'La Môle',           type: 'base2',
         stop: 30,  cutoff: cutoff('2026-04-11T21:00:00'), supplies: 'base',
         tip: 'BASE VIE. Récupérer sac de délestage. Se préparer pour la nuit : vêtements chauds, nouvelle lampe. Barrière serrée à 21h00 — ne pas traîner.',
     },
     {
-        km: 105,   dplus: 3552, name: 'Col de Canadel',    type: 'ravito',
+        km: 105,   dplus: 3552, dminus: 3525, name: 'Col de Canadel',    type: 'ravito',
         stop: 5,   cutoff: null, supplies: 'water',
         tip: 'Eau seulement — prévoir alimentation personnelle. Nuit tombée. Garder le cap et la concentration. Section de montée — rythme posé.',
     },
     {
-        km: 117.6, dplus: 3757, name: 'Plage de la Douane', type: 'ravito',
+        km: 117.6, dplus: 3757, dminus: 4050, name: 'Plage de la Douane', type: 'ravito',
         stop: 5,   cutoff: cutoff('2026-04-12T02:30:00'), supplies: 'solid',
         tip: 'Ravito solide. Point de bascule — la mer ! 2h30 du matin : moment dur psychologiquement. Tenir bon, le plus dur est derrière. Barrière à 02h30 dim.',
     },
     {
-        km: 130.4, dplus: 4189, name: "Val d'Astier",      type: 'ravito',
+        km: 130.4, dplus: 4189, dminus: 4360, name: "Val d'Astier",      type: 'ravito',
         stop: 5,   cutoff: null, supplies: 'water',
         tip: 'Eau seulement — prévoir alimentation personnelle. L\'aube approche, tenir jusqu\'au lever du jour. Manger et boire malgré la fatigue.',
     },
     {
-        km: 145.1, dplus: 4812, name: 'Gassin',            type: 'ravito',
+        km: 145.1, dplus: 4812, dminus: 4545, name: 'Gassin',            type: 'ravito',
         stop: 5,   cutoff: null, supplies: 'solid',
         tip: 'Ravito solide. Village médiéval perché — vue imprenable. Plus que 16,5 km ! Gérer l\'allure sur cette fin de course.',
     },
     {
-        km: 161.6, dplus: 4907, name: 'Arrivée Grimaud',   type: 'arrivee',
+        km: 161.6, dplus: 4907, dminus: 4907, name: 'Arrivée Grimaud',   type: 'arrivee',
         stop: 0,   cutoff: cutoff('2026-04-12T11:30:00'), supplies: null,
         tip: 'LIGNE D\'ARRIVÉE. Profitez de chaque mètre des derniers kilomètres !',
     },
@@ -594,6 +594,10 @@ function update() {
             <div class="cp-info">
                 <span class="cp-info-label">D+ cumulé</span>
                 <span class="cp-info-value">${cp.dplus.toLocaleString('fr-FR')} m</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">D− cumulé</span>
+                <span class="cp-info-value">${cp.dminus.toLocaleString('fr-FR')} m</span>
             </div>`;
         if (i > 0) {
             const cumulMins = (r.arrMs - START_MS) / 60_000;
@@ -609,6 +613,10 @@ function update() {
             <div class="cp-info">
                 <span class="cp-info-label">D+ segment</span>
                 <span class="cp-info-value">${(cp.dplus - CPS[i-1].dplus).toLocaleString('fr-FR')} m</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">D− segment</span>
+                <span class="cp-info-value">${(cp.dminus - CPS[i-1].dminus).toLocaleString('fr-FR')} m</span>
             </div>
             <div class="cp-info">
                 <span class="cp-info-label">Tps segment${r.segActual ? ' ✓' : ''}</span>
