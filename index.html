@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Western Azuréenne 2026 — Plan de Course</title>
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --surface: #ffffff;
+            --surface2: #f1f3f5;
+            --border: #dee2e6;
+            --text: #212529;
+            --text-muted: #6c757d;
+            --accent: #2563eb;
+            --accent-light: #dbeafe;
+            --green: #16a34a;
+            --green-light: #dcfce7;
+            --orange: #ea580c;
+            --orange-light: #ffedd5;
+            --red: #dc2626;
+            --red-light: #fee2e2;
+            --night-light: #e0e7ff;
+            --base-vie: #7c3aed;
+            --base-vie-light: #ede9fe;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+                --border: #475569; --text: #f1f5f9; --text-muted: #94a3b8;
+                --accent: #3b82f6; --accent-light: #1e3a5f;
+                --green-light: #14532d; --orange-light: #431407; --red-light: #450a0a;
+                --night-light: #1e1b4b; --base-vie-light: #2e1065;
+            }
+        }
+        html.dark {
+            --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+            --border: #475569; --text: #f1f5f9; --text-muted: #94a3b8;
+            --accent: #3b82f6; --accent-light: #1e3a5f;
+            --green-light: #14532d; --orange-light: #431407; --red-light: #450a0a;
+            --night-light: #1e1b4b; --base-vie-light: #2e1065;
+        }
+        html.light {
+            --bg: #f8f9fa; --surface: #ffffff; --surface2: #f1f3f5;
+            --border: #dee2e6; --text: #212529; --text-muted: #6c757d;
+            --accent: #2563eb; --accent-light: #dbeafe;
+            --green: #16a34a; --green-light: #dcfce7;
+            --orange: #ea580c; --orange-light: #ffedd5;
+            --red: #dc2626; --red-light: #fee2e2;
+            --night-light: #e0e7ff; --base-vie: #7c3aed; --base-vie-light: #ede9fe;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg); color: var(--text);
+            line-height: 1.5; padding: 1rem 1rem 3rem;
+            max-width: 720px; margin: 0 auto;
+        }
+        header { text-align: center; margin-bottom: 1.5rem; padding-top: 2rem; }
+        header h1 { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
+        header .sub { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem; }
+        .stats-bar {
+            display: flex; flex-wrap: wrap; gap: 0.5rem;
+            justify-content: center; margin-bottom: 1.5rem;
+        }
+        .stat-chip {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 999px; padding: 0.25rem 0.75rem;
+            font-size: 0.8rem; font-weight: 500;
+        }
+        .controls {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 0.75rem; padding: 1rem 1.25rem; margin-bottom: 1.5rem;
+        }
+        .controls-label {
+            display: flex; align-items: center; gap: 0.75rem;
+            font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem;
+        }
+        .coeff-value {
+            background: var(--accent); color: white;
+            border-radius: 999px; padding: 0.15rem 0.6rem; font-size: 0.9rem;
+        }
+        input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+        .slider-labels {
+            display: flex; justify-content: space-between;
+            font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;
+        }
+        .arrival-summary {
+            background: var(--accent-light); border-radius: 0.5rem;
+            padding: 0.75rem 1rem; margin-top: 0.75rem;
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .arrival-summary strong { font-size: 1.15rem; }
+        .checkpoints { display: flex; flex-direction: column; gap: 0.75rem; }
+        .cp-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 0.75rem; overflow: hidden;
+        }
+        .cp-card.base-vie { border-color: var(--base-vie); border-width: 2px; }
+        .cp-card.depart  { border-color: var(--accent);   border-width: 2px; }
+        .cp-card.arrivee { border-color: var(--green);    border-width: 2px; }
+        .cp-header {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.7rem 1rem; background: var(--surface2);
+            flex-wrap: wrap;
+        }
+        .cp-km { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); min-width: 58px; }
+        .cp-name { font-weight: 700; font-size: 1rem; flex: 1; }
+        .cp-badge {
+            font-size: 0.72rem; padding: 0.2rem 0.55rem;
+            border-radius: 999px; font-weight: 600;
+        }
+        .badge-ravito  { background: var(--accent-light);   color: var(--accent);   }
+        .badge-base    { background: var(--base-vie-light); color: var(--base-vie); }
+        .badge-depart  { background: var(--accent-light);   color: var(--accent);   }
+        .badge-arrivee { background: var(--green-light);    color: var(--green);    }
+        .night-indicator {
+            display: inline-flex; align-items: center; gap: 0.2rem;
+            padding: 0.15rem 0.5rem; border-radius: 999px;
+            font-size: 0.7rem; font-weight: 600;
+        }
+        .night-indicator.night { background: var(--night-light); color: #6366f1; }
+        .night-indicator.day   { background: #fef3c7; color: #b45309; }
+        .cp-body {
+            padding: 0.75rem 1rem;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 0.6rem;
+        }
+        .cp-info { display: flex; flex-direction: column; gap: 0.05rem; }
+        .cp-info-label {
+            font-size: 0.68rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600;
+        }
+        .cp-info-value { font-size: 1rem; font-weight: 700; }
+        .cp-info-value.night { color: #6366f1; }
+        .cp-info-value.day   { color: #d97706; }
+        .cutoff-bar {
+            margin: 0 1rem 0.75rem; border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem; font-size: 0.85rem;
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 0.25rem;
+        }
+        .cutoff-ok     { background: var(--green-light);  color: var(--green);  }
+        .cutoff-warn   { background: var(--orange-light); color: var(--orange); }
+        .cutoff-danger { background: var(--red-light);    color: var(--red);    }
+        .cutoff-margin { font-weight: 700; }
+        .cp-tip {
+            margin: 0 1rem 0.75rem; padding: 0.5rem 0.75rem;
+            background: var(--surface2); border-radius: 0.5rem;
+            font-size: 0.8rem; color: var(--text-muted);
+            border-left: 3px solid var(--accent);
+        }
+        .theme-toggle {
+            position: fixed; top: 0.75rem; right: 0.75rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 999px; padding: 0.35rem 0.75rem;
+            cursor: pointer; font-size: 0.85rem; color: var(--text);
+            z-index: 100;
+        }
+        footer {
+            text-align: center; margin-top: 2rem;
+            color: var(--text-muted); font-size: 0.73rem;
+            line-height: 1.8;
+        }
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.4rem; }
+            .cp-body { grid-template-columns: 1fr 1fr; }
+            .slider-labels span:nth-child(2) { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="Basculer thème">🌗</button>
+
+<header>
+    <h1>🏔 Western Azuréenne 2026</h1>
+    <p class="sub">Grimaud · Vendredi 10 avril 2026 · 22h00</p>
+    <p class="sub">161,6 km · 4 907 m D+ · ~210 km-effort</p>
+</header>
+
+<div class="stats-bar">
+    <span class="stat-chip">📍 Départ Grimaud 22h00 ven</span>
+    <span class="stat-chip">🏁 Clôture dim 11h30</span>
+    <span class="stat-chip">⛺ 2 bases de vie</span>
+    <span class="stat-chip">📐 Référence 18h / 146 ke</span>
+</div>
+
+<div class="controls">
+    <div class="controls-label">
+        Coefficient fatigue :
+        <span class="coeff-value" id="coeff-display">×1.20</span>
+    </div>
+    <input type="range" id="coeff-slider" min="110" max="135" value="120" step="1" oninput="update()">
+    <div class="slider-labels">
+        <span>×1.10 optimiste</span>
+        <span>×1.20 recommandé</span>
+        <span>×1.35 prudent</span>
+    </div>
+    <div class="arrival-summary">
+        <span>Arrivée estimée à Grimaud :</span>
+        <strong id="arrival-time">—</strong>
+        <span id="total-time" style="color: var(--text-muted)"></span>
+    </div>
+</div>
+
+<div class="checkpoints" id="checkpoints"></div>
+
+<footer>
+    Plan de course personnel · Données roadbook officiel Western Azuréenne 2026<br>
+    Formule : ke_segment × (7,4 min/ke × coeff) + arrêts · Nuit = 21h→06h
+</footer>
+
+<script>
+// ── Constantes ─────────────────────────────────────────────────────────────────
+const START_MS  = new Date('2026-04-10T22:00:00').getTime();
+const BASE_PACE = 7.4; // min/ke  (1080 min / 146 ke Coursières)
+
+function cutoff(isoStr) { return new Date(isoStr).getTime(); }
+
+// ── Données ────────────────────────────────────────────────────────────────────
+const CPS = [
+    {
+        km: 0,     dplus: 0,    name: 'Grimaud',           type: 'depart',
+        stop: 0,   cutoff: null,
+        tip: 'Départ 22h00 — vérification matériel obligatoire. Lampe frontale indispensable dès le départ. Gérer le départ groupé, ne pas partir trop vite.',
+    },
+    {
+        km: 19.2,  dplus: 517,  name: 'Sainte-Maxime',     type: 'ravito',
+        stop: 5,   cutoff: cutoff('2026-04-11T02:00:00'),
+        tip: 'Premier ravito. Nuit noire — vérifier lampe frontale. Remplir flasques, manger solide. Barrière à 02h00, large marge attendue au départ.',
+    },
+    {
+        km: 34.4,  dplus: 1132, name: 'Col de Gratteloup', type: 'ravito',
+        stop: 5,   cutoff: null,
+        tip: 'Col technique. Gérer le rythme en montée. Belle vue au lever du soleil si timing ok (vers 6h-7h selon coeff).',
+    },
+    {
+        km: 47.7,  dplus: 1569, name: 'Le Plan de la Tour', type: 'ravito',
+        stop: 5,   cutoff: cutoff('2026-04-11T09:30:00'),
+        tip: 'Milieu de matinée. Ravitaillement solide conseillé — long segment jusqu\'à La Garde-Freinet. Barrière 09h30, surveiller la marge.',
+    },
+    {
+        km: 61.6,  dplus: 2052, name: 'La Garde-Freinet',  type: 'base1',
+        stop: 20,  cutoff: cutoff('2026-04-11T13:00:00'),
+        tip: 'BASE VIE. Récupérer sac de délestage. Soins pieds si nécessaire. Manger chaud. Ne dormir que si marge > 2h sur barrière.',
+    },
+    {
+        km: 82.6,  dplus: 2793, name: 'Col du Périer',     type: 'ravito',
+        stop: 5,   cutoff: null,
+        tip: 'Section longue après la base vie. Rythme souvent ralenti — normal. Gérer l\'effort, surveiller l\'hydratation en milieu d\'après-midi.',
+    },
+    {
+        km: 95.1,  dplus: 3004, name: 'La Môle',           type: 'base2',
+        stop: 12,  cutoff: cutoff('2026-04-11T21:00:00'),
+        tip: 'BASE VIE. Récupérer sac de délestage. Se préparer pour la nuit : vêtements chauds, nouvelle lampe. Barrière serrée à 21h00 — ne pas traîner.',
+    },
+    {
+        km: 105,   dplus: 3552, name: 'Col de Canadel',    type: 'ravito',
+        stop: 5,   cutoff: null,
+        tip: 'Nuit tombée. Garder le cap et la concentration. Section de montée — rythme posé, respiration maîtrisée.',
+    },
+    {
+        km: 117.6, dplus: 3757, name: 'Plage de la Douane', type: 'ravito',
+        stop: 5,   cutoff: cutoff('2026-04-12T02:30:00'),
+        tip: 'Point de bascule — la mer ! 2h30 du matin : moment psychologiquement difficile. Tenir bon, le plus dur est derrière. Barrière à 02h30 dim.',
+    },
+    {
+        km: 130.4, dplus: 4189, name: "Val d'Astier",      type: 'ravito',
+        stop: 5,   cutoff: null,
+        tip: 'Dernier tiers du parcours. L\'aube approche — tenir jusqu\'au lever du jour, ça redonne de l\'énergie. Manger et boire malgré la fatigue.',
+    },
+    {
+        km: 145.1, dplus: 4812, name: 'Gassin',            type: 'ravito',
+        stop: 5,   cutoff: null,
+        tip: 'Village médiéval perché — vue imprenable. Plus que 16,5 km ! Finir ici se mérite. Gérer l\'allure sur cette fin de course.',
+    },
+    {
+        km: 161.6, dplus: 4907, name: 'Arrivée Grimaud',   type: 'arrivee',
+        stop: 0,   cutoff: cutoff('2026-04-12T11:30:00'),
+        tip: 'LIGNE D\'ARRIVÉE. Profitez de chaque mètre des derniers kilomètres !',
+    },
+];
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+function isNight(ms) {
+    const h = new Date(ms).getHours();
+    return h >= 21 || h < 6;
+}
+
+function fmtTime(ms) {
+    const d = new Date(ms);
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mm = String(d.getMinutes()).padStart(2,'0');
+    const day = d.getDay(); // 5=ven, 6=sam, 0=dim
+    const lbl = day === 6 ? ' sam' : day === 0 ? ' dim' : ' ven';
+    return `${hh}h${mm}${lbl}`;
+}
+
+function fmtDur(mins) {
+    const h = Math.floor(mins / 60);
+    const m = Math.round(mins % 60);
+    return `${h}h${String(m).padStart(2,'0')}`;
+}
+
+function fmtMargin(marginMins) {
+    const abs = Math.abs(marginMins);
+    const h = Math.floor(abs / 60);
+    const m = Math.round(abs % 60);
+    const str = h > 0 ? `${h}h${String(m).padStart(2,'0')}` : `${Math.round(abs)} min`;
+    return marginMins >= 0 ? `+${str} sur barrière` : `−${str} — DÉPASSÉE`;
+}
+
+// ── Calcul ─────────────────────────────────────────────────────────────────────
+// ke = km + D+(m) / 100
+function segKe(kmDelta, dplusDelta) { return kmDelta + dplusDelta / 100; }
+
+function calculate(coeff) {
+    const pace = BASE_PACE * coeff; // min/ke
+    let ms = START_MS;
+    return CPS.map((cp, i) => {
+        if (i === 0) return { arrMs: ms, segMins: 0, ke: 0 };
+        const prev = CPS[i - 1];
+        const ke   = segKe(cp.km - prev.km, cp.dplus - prev.dplus);
+        const segMins = ke * pace;
+        ms += (prev.stop + segMins) * 60_000;
+        return { arrMs: ms, segMins, ke };
+    });
+}
+
+// ── Rendu ──────────────────────────────────────────────────────────────────────
+function typeInfo(type) {
+    switch (type) {
+        case 'depart':  return ['Départ',          'badge-depart',  'cp-card depart'];
+        case 'arrivee': return ['Arrivée',          'badge-arrivee', 'cp-card arrivee'];
+        case 'base1':
+        case 'base2':   return ['Base de Vie',      'badge-base',    'cp-card base-vie'];
+        default:        return ['Ravitaillement',   'badge-ravito',  'cp-card'];
+    }
+}
+
+function update() {
+    const coeff = parseInt(document.getElementById('coeff-slider').value) / 100;
+    document.getElementById('coeff-display').textContent = `×${coeff.toFixed(2)}`;
+
+    const res = calculate(coeff);
+    const last = res[res.length - 1];
+    document.getElementById('arrival-time').textContent = fmtTime(last.arrMs);
+    document.getElementById('total-time').textContent =
+        `(${fmtDur((last.arrMs - START_MS) / 60_000)} de course)`;
+
+    const container = document.getElementById('checkpoints');
+    container.innerHTML = '';
+
+    CPS.forEach((cp, i) => {
+        const r = res[i];
+        const night = isNight(r.arrMs);
+        const [typeLabel, badgeClass, cardClass] = typeInfo(cp.type);
+
+        // Cutoff
+        let cutoffHtml = '';
+        if (cp.cutoff) {
+            const marginMins = (cp.cutoff - r.arrMs) / 60_000;
+            const cls = marginMins < 30 ? 'cutoff-danger' : marginMins < 90 ? 'cutoff-warn' : 'cutoff-ok';
+            cutoffHtml = `<div class="cutoff-bar ${cls}">
+                <span>🚧 Barrière ${fmtTime(cp.cutoff)}</span>
+                <span class="cutoff-margin">${fmtMargin(marginMins)}</span>
+            </div>`;
+        }
+
+        // Body cells
+        let cells = `
+            <div class="cp-info">
+                <span class="cp-info-label">Arrivée estimée</span>
+                <span class="cp-info-value ${night ? 'night' : 'day'}">${fmtTime(r.arrMs)}</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">D+ cumulé</span>
+                <span class="cp-info-value">${cp.dplus.toLocaleString('fr-FR')} m</span>
+            </div>`;
+        if (i > 0) {
+            cells += `
+            <div class="cp-info">
+                <span class="cp-info-label">Tps segment</span>
+                <span class="cp-info-value">${fmtDur(r.segMins)}</span>
+            </div>
+            <div class="cp-info">
+                <span class="cp-info-label">ke segment</span>
+                <span class="cp-info-value">${r.ke.toFixed(1)} ke</span>
+            </div>`;
+        }
+        if (cp.stop > 0) {
+            cells += `
+            <div class="cp-info">
+                <span class="cp-info-label">Arrêt prévu</span>
+                <span class="cp-info-value">${cp.stop} min</span>
+            </div>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = cardClass;
+        card.innerHTML = `
+            <div class="cp-header">
+                <span class="cp-km">km ${cp.km}</span>
+                <span class="cp-name">${cp.name}</span>
+                <span class="cp-badge ${badgeClass}">${typeLabel}</span>
+                <span class="night-indicator ${night ? 'night' : 'day'}">${night ? '🌙 Nuit' : '☀️ Jour'}</span>
+            </div>
+            <div class="cp-body">${cells}</div>
+            ${cutoffHtml}
+            <div class="cp-tip">💡 ${cp.tip}</div>`;
+        container.appendChild(card);
+    });
+}
+
+// ── Thème ──────────────────────────────────────────────────────────────────────
+function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.classList.contains('dark') ||
+        (!html.classList.contains('light') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    html.classList.toggle('dark', !isDark);
+    html.classList.toggle('light', isDark);
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────────
+update();
+</script>
+</body>
+</html>
