@@ -278,7 +278,7 @@
         <input type="number" id="ref-dplus" value="1900" min="0" max="20000" step="100"
                style="width:5rem;font-family:inherit;font-size:0.95rem;font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:0.4rem;padding:0.15rem 0.4rem;color:var(--text)"
                oninput="update()"> m D+ ·
-        <input type="time" id="ref-time" value="07:30"
+        <input type="time" id="ref-time" value="06:30"
                style="font-family:inherit;font-size:0.95rem;font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:0.4rem;padding:0.15rem 0.4rem;color:var(--text)"
                oninput="update()">
         <span id="pace-display" style="font-size:0.8rem;color:var(--text-muted)"></span>
@@ -337,7 +337,7 @@ function refKe() {
     return km + dp / 100;
 }
 function basePace() {
-    const val = document.getElementById('ref-time').value || '07:30';
+    const val = document.getElementById('ref-time').value || '06:30';
     const [h, m] = val.split(':').map(Number);
     return ((h * 60) + (m || 0)) / refKe();
 }
