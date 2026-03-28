@@ -616,11 +616,7 @@ function update() {
 
         // ── Section Cumulé ──
         const cumulMins = i > 0 ? (r.arrMs - START_MS) / 60_000 : 0;
-        cells += `<div class="cp-section">Cumulé</div>
-            <div class="cp-info">
-                <span class="cp-info-label">${timeLabel}</span>
-                <span class="cp-info-value ${timeClass}">${fmtTime(r.arrMs)}</span>
-            </div>`;
+        cells += `<div class="cp-section">Cumulé</div>`;
         if (i > 0) {
             cells += `
             <div class="cp-info">
