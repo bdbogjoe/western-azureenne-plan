@@ -369,8 +369,8 @@ function altAt(km) {
     return before[1] + ((km - before[0]) / (after[0] - before[0])) * (after[1] - before[1]);
 }
 
-// Mapping image 1000×300 px : km 0→x≈22, km 161.6→x≈978, alt 800→y≈30, alt 0→y≈282
-const OX = km  => 22 + (km / 161.6) * 956;
+// Mapping image 1000×300 px : calibré sur les cercles vert (x=46) et rouge (x=969)
+const OX = km  => 46 + (km / 161.6) * 923;
 const OY = alt => 282 - (alt / 800) * 252;
 
 function buildMainOverlay() {
