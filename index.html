@@ -584,6 +584,10 @@ function update() {
             // ── Section Segment ──
             cells += `<div class="cp-section">Segment</div>
             <div class="cp-info">
+                <span class="cp-info-label">Temps${r.segActual ? ' ✓' : ''}</span>
+                <span class="cp-info-value${r.segActual ? ' actual' : ''}">${fmtDur(r.segMins)}</span>
+            </div>
+            <div class="cp-info">
                 <span class="cp-info-label">Km</span>
                 <span class="cp-info-value">${(cp.km - CPS[i-1].km).toFixed(1)} km</span>
             </div>
@@ -594,10 +598,6 @@ function update() {
             <div class="cp-info">
                 <span class="cp-info-label">D−</span>
                 <span class="cp-info-value">${(cp.dminus - CPS[i-1].dminus).toLocaleString('fr-FR')} m</span>
-            </div>
-            <div class="cp-info">
-                <span class="cp-info-label">Temps${r.segActual ? ' ✓' : ''}</span>
-                <span class="cp-info-value${r.segActual ? ' actual' : ''}">${fmtDur(r.segMins)}</span>
             </div>
             <div class="cp-info">
                 <span class="cp-info-label">ke</span>
