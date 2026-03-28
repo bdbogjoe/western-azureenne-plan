@@ -257,10 +257,17 @@
     <span class="stat-chip">📍 Départ Grimaud 22h00 ven</span>
     <span class="stat-chip">🏁 Clôture dim 11h30</span>
     <span class="stat-chip">⛺ 2 bases de vie</span>
-    <span class="stat-chip">📐 Référence 18h / 146 ke</span>
+    <span class="stat-chip">📐 Référence Coursières · 146 ke</span>
 </div>
 
 <div class="controls">
+    <div class="controls-label" style="margin-bottom:0.6rem">
+        Référence Coursières Ultra (106 km · 146 ke) :
+        <input type="time" id="ref-time" value="18:00"
+               style="font-family:inherit;font-size:0.95rem;font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:0.4rem;padding:0.15rem 0.4rem;color:var(--text);margin-left:0.4rem"
+               oninput="update()">
+        <span id="pace-display" style="font-size:0.8rem;color:var(--text-muted);margin-left:0.5rem"></span>
+    </div>
     <div class="coeff-grid">
         <div>
             <div class="controls-label">
@@ -315,7 +322,12 @@
 <script>
 // ── Constantes ─────────────────────────────────────────────────────────────────
 const START_MS  = new Date('2026-04-10T22:00:00').getTime();
-const BASE_PACE = 7.4; // min/ke  (1080 min / 146 ke Coursières)
+const REF_KE    = 146; // Coursières Ultra : 106 km + 4 000 m D+
+function basePace() {
+    const val = document.getElementById('ref-time').value || '18:00';
+    const [h, m] = val.split(':').map(Number);
+    return ((h * 60) + (m || 0)) / REF_KE;
+}
 
 function cutoff(isoStr) { return new Date(isoStr).getTime(); }
 
@@ -544,7 +556,7 @@ function calculate(coeffStart, coeffEnd) {
         // Coeff interpolé au milieu du segment
         const ratio   = Math.min((cumulKe + ke / 2) / totalKe, 1);
         const coeff   = coeffStart + (coeffEnd - coeffStart) * ratio;
-        const segMins = ke * BASE_PACE * coeff;
+        const segMins = ke * basePace() * coeff;
         const prevDep = results[i - 1].depMs;
 
         let arrMs     = prevDep + segMins * 60_000;
@@ -583,6 +595,7 @@ function update() {
     const [cs, ce] = coeffs();
     document.getElementById('coeff-start-display').textContent = `×${cs.toFixed(2)}`;
     document.getElementById('coeff-end-display').textContent   = `×${ce.toFixed(2)}`;
+    document.getElementById('pace-display').textContent        = `→ ${basePace().toFixed(2)} min/ke`;
 
     const res = calculate(cs, ce);
     const last = res[res.length - 1];
