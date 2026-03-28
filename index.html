@@ -112,6 +112,7 @@
         }
         .cp-km { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); min-width: 58px; }
         .cp-name { font-weight: 700; font-size: 1rem; flex: 1; }
+        .cp-eta { font-weight: 700; font-size: 1rem; margin-left: auto; }
         .cp-badge {
             font-size: 0.72rem; padding: 0.2rem 0.55rem;
             border-radius: 999px; font-weight: 600;
@@ -680,6 +681,7 @@ function update() {
                 : cp.supplies === 'base'
                 ? '<span class="cp-badge badge-supplies-base"><svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:3px"><circle cx="10" cy="10" r="10" fill="#3a3a3a"/><circle cx="10" cy="11" r="4.5" fill="none" stroke="white" stroke-width="1.2"/><line x1="5" y1="4" x2="5" y2="17" stroke="white" stroke-width="1.3" stroke-linecap="round"/><line x1="4" y1="4" x2="4" y2="7.5" stroke="white" stroke-width="1" stroke-linecap="round"/><line x1="6" y1="4" x2="6" y2="7.5" stroke="white" stroke-width="1" stroke-linecap="round"/><path d="M4,7.5 Q5,9 6,7.5" fill="none" stroke="white" stroke-width="1" stroke-linecap="round"/><line x1="15" y1="4" x2="15" y2="17" stroke="white" stroke-width="1.3" stroke-linecap="round"/><path d="M15,4 C17,5.5 17,8 15,9" fill="none" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>Repas complet</span>'
                 : ''}
+                <span class="cp-eta ${hasActual ? 'actual' : (night ? 'night' : 'day')}">${fmtTime(r.arrMs)}</span>
             </div>
             <div class="cp-body">${cells}</div>
             ${cutoffHtml}
