@@ -269,12 +269,18 @@
 </div>
 
 <div class="controls">
-    <div class="controls-label" style="margin-bottom:0.6rem">
-        Référence Coursières Ultra (106 km · 146 ke) :
+    <div class="controls-label" style="margin-bottom:0.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:0.4rem">
+        Référence :
+        <input type="number" id="ref-km" value="106" min="1" max="500" step="1"
+               style="width:4rem;font-family:inherit;font-size:0.95rem;font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:0.4rem;padding:0.15rem 0.4rem;color:var(--text)"
+               oninput="update()"> km ·
+        <input type="number" id="ref-dplus" value="4000" min="0" max="20000" step="100"
+               style="width:5rem;font-family:inherit;font-size:0.95rem;font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:0.4rem;padding:0.15rem 0.4rem;color:var(--text)"
+               oninput="update()"> m D+ ·
         <input type="time" id="ref-time" value="18:00"
-               style="font-family:inherit;font-size:0.95rem;font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:0.4rem;padding:0.15rem 0.4rem;color:var(--text);margin-left:0.4rem"
+               style="font-family:inherit;font-size:0.95rem;font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:0.4rem;padding:0.15rem 0.4rem;color:var(--text)"
                oninput="update()">
-        <span id="pace-display" style="font-size:0.8rem;color:var(--text-muted);margin-left:0.5rem"></span>
+        <span id="pace-display" style="font-size:0.8rem;color:var(--text-muted)"></span>
     </div>
     <div class="coeff-grid">
         <div>
@@ -324,11 +330,15 @@
 
 <script>
 const START_MS = new Date('2026-04-11T09:00:00').getTime();
-const REF_KE   = 146;
+function refKe() {
+    const km = parseFloat(document.getElementById('ref-km').value) || 106;
+    const dp = parseFloat(document.getElementById('ref-dplus').value) || 4000;
+    return km + dp / 100;
+}
 function basePace() {
     const val = document.getElementById('ref-time').value || '18:00';
     const [h, m] = val.split(':').map(Number);
-    return ((h * 60) + (m || 0)) / REF_KE;
+    return ((h * 60) + (m || 0)) / refKe();
 }
 
 function cutoff(isoStr) { return new Date(isoStr).getTime(); }
@@ -521,7 +531,7 @@ function update() {
     const [cs, ce] = coeffs();
     document.getElementById('coeff-start-display').textContent = `×${cs.toFixed(2)}`;
     document.getElementById('coeff-end-display').textContent   = `×${ce.toFixed(2)}`;
-    document.getElementById('pace-display').textContent        = `→ ${basePace().toFixed(2)} min/ke`;
+    document.getElementById('pace-display').textContent        = `→ ${refKe().toFixed(0)} ke · ${basePace().toFixed(2)} min/ke`;
 
     const res = calculate(cs, ce);
     const last = res[res.length - 1];
