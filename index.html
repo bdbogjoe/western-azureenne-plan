@@ -381,7 +381,12 @@ function update() {
                 <span class="cp-info-value">${cp.dplus.toLocaleString('fr-FR')} m</span>
             </div>`;
         if (i > 0) {
+            const cumulMins = (r.arrMs - START_MS) / 60_000;
             cells += `
+            <div class="cp-info">
+                <span class="cp-info-label">Tps cumulé</span>
+                <span class="cp-info-value">${fmtDur(cumulMins)}</span>
+            </div>
             <div class="cp-info">
                 <span class="cp-info-label">Tps segment</span>
                 <span class="cp-info-value">${fmtDur(r.segMins)}</span>
