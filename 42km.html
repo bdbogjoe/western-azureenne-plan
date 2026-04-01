@@ -439,16 +439,17 @@ function fmtTime(ms) {
 }
 
 function fmtDur(mins) {
-    const h = Math.floor(mins / 60);
-    const m = Math.round(mins % 60);
+    const total = Math.round(mins);
+    const h = Math.floor(total / 60);
+    const m = total % 60;
     return `${h}h${String(m).padStart(2,'0')}`;
 }
 
 function fmtMargin(marginMins) {
-    const abs = Math.abs(marginMins);
-    const h = Math.floor(abs / 60);
-    const m = Math.round(abs % 60);
-    const str = h > 0 ? `${h}h${String(m).padStart(2,'0')}` : `${Math.round(abs)} min`;
+    const total = Math.round(Math.abs(marginMins));
+    const h = Math.floor(total / 60);
+    const m = total % 60;
+    const str = h > 0 ? `${h}h${String(m).padStart(2,'0')}` : `${total} min`;
     return marginMins >= 0 ? `+${str} sur barrière` : `−${str} — DÉPASSÉE`;
 }
 
